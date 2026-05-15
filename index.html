@@ -263,6 +263,17 @@
       </div>
       <div id="adminPanelContent" style="display: none;">
         <div class="space-y-5">
+          <!-- بخش آمار بازدیدکنندگان واقعی -->
+          <div class="bg-green-900/30 border border-green-500/30 rounded-xl p-4">
+            <div class="flex items-center gap-3 mb-2">
+              <i class="fas fa-chart-line text-2xl text-green-400"></i>
+              <h3 class="font-bold text-green-400 text-lg">👥 آمار بازدیدکنندگان</h3>
+            </div>
+            <p class="text-zinc-300 text-sm mb-2">تعداد کل بازدیدکنندگان یکتا (Unique Visitors):</p>
+            <div class="text-4xl font-bold text-green-400" id="totalVisitorsDisplay">در حال دریافت...</div>
+            <p class="text-xs text-zinc-500 mt-2">🔹 این عدد نشان‌دهنده تعداد افرادی است که تاکنون از سایت دیدن کرده‌اند.</p>
+          </div>
+          
           <div>
             <label class="block text-sm mb-2">🎨 رنگ اصلی سایت</label>
             <input type="color" id="siteColor" value="#22c55e" class="w-full h-12 rounded-xl cursor-pointer transition-all hover:scale-105">
@@ -371,7 +382,7 @@
       <div class="max-w-5xl mx-auto px-6">
         <h2 class="text-4xl font-bold text-center mb-12 text-green-400 slide-up">⚡ قابلیت‌های ربات بتمن</h2>
         <div class="grid grid-cols-2 md:grid-cols-3 gap-5">
-          <!-- کارت 1 -->
+          <!-- کارت 1 تا 6 (همانند قبل) -->
           <div class="feature-card relative" style="min-height: 220px;">
             <div class="card-inner relative w-full h-full transition-all duration-700 transform-style-3d cursor-pointer rounded-2xl">
               <div class="card-front absolute w-full h-full backface-hidden bg-zinc-900 rounded-2xl border border-white/10 p-5 flex flex-col items-center justify-center text-center">
@@ -387,7 +398,6 @@
               </div>
             </div>
           </div>
-          <!-- کارت 2 -->
           <div class="feature-card relative" style="min-height: 220px;">
             <div class="card-inner relative w-full h-full transition-all duration-700 transform-style-3d cursor-pointer rounded-2xl">
               <div class="card-front absolute w-full h-full backface-hidden bg-zinc-900 rounded-2xl border border-white/10 p-5 flex flex-col items-center justify-center text-center">
@@ -403,7 +413,6 @@
               </div>
             </div>
           </div>
-          <!-- کارت 3 -->
           <div class="feature-card relative" style="min-height: 220px;">
             <div class="card-inner relative w-full h-full transition-all duration-700 transform-style-3d cursor-pointer rounded-2xl">
               <div class="card-front absolute w-full h-full backface-hidden bg-zinc-900 rounded-2xl border border-white/10 p-5 flex flex-col items-center justify-center text-center">
@@ -419,7 +428,6 @@
               </div>
             </div>
           </div>
-          <!-- کارت 4 -->
           <div class="feature-card relative" style="min-height: 220px;">
             <div class="card-inner relative w-full h-full transition-all duration-700 transform-style-3d cursor-pointer rounded-2xl">
               <div class="card-front absolute w-full h-full backface-hidden bg-zinc-900 rounded-2xl border border-white/10 p-5 flex flex-col items-center justify-center text-center">
@@ -435,7 +443,6 @@
               </div>
             </div>
           </div>
-          <!-- کارت 5 -->
           <div class="feature-card relative" style="min-height: 220px;">
             <div class="card-inner relative w-full h-full transition-all duration-700 transform-style-3d cursor-pointer rounded-2xl">
               <div class="card-front absolute w-full h-full backface-hidden bg-zinc-900 rounded-2xl border border-white/10 p-5 flex flex-col items-center justify-center text-center">
@@ -451,7 +458,6 @@
               </div>
             </div>
           </div>
-          <!-- کارت 6 -->
           <div class="feature-card relative" style="min-height: 220px;">
             <div class="card-inner relative w-full h-full transition-all duration-700 transform-style-3d cursor-pointer rounded-2xl">
               <div class="card-front absolute w-full h-full backface-hidden bg-zinc-900 rounded-2xl border border-white/10 p-5 flex flex-col items-center justify-center text-center">
@@ -560,7 +566,8 @@
       botLocks: { link: false, spam: false, foul: false, media: false, file: false, flood: false },
       pollVotes: { عالی: 0, خوب: 0, "نیاز به بهبود": 0 },
       ads: [],
-      onlineUsers: {}   // اضافه شد
+      onlineUsers: {},
+      totalVisitors: 0   // شمارنده کل بازدیدکنندگان یکتا
     };
     
     let siteData = { ...DEFAULT_DATA };
@@ -584,7 +591,22 @@
       return false;
     }
 
-    // ==================== آنلاین واقعی با JSONBin (بدون PubNub) ====================
+    // ==================== آمار بازدیدکنندگان یکتا ====================
+    async function updateTotalVisitors() {
+      // بررسی اینکه آیا این کاربر قبلاً بازدید کرده است
+      const hasVisited = localStorage.getItem('has_visited_batman');
+      if (!hasVisited) {
+        // کاربر جدید است، تعداد کل بازدیدکنندگان را یک واحد افزایش بده
+        siteData.totalVisitors = (siteData.totalVisitors || 0) + 1;
+        await saveDataToServer();
+        localStorage.setItem('has_visited_batman', 'true');
+      }
+      // نمایش تعداد کل در پنل مدیریت
+      const totalSpan = document.getElementById('totalVisitorsDisplay');
+      if (totalSpan) totalSpan.textContent = siteData.totalVisitors || 0;
+    }
+
+    // ==================== آنلاین واقعی با JSONBin ====================
     let onlineUserId = localStorage.getItem('online_user_id');
     if (!onlineUserId) {
       onlineUserId = 'user_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
@@ -593,42 +615,29 @@
 
     async function updateOnlineUsers() {
       try {
-        // دریافت داده‌های فعلی از دیتابیس
         const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, { headers: { 'X-Master-Key': API_KEY } });
         const data = await response.json();
         let onlineUsers = data.record.onlineUsers || {};
-        
-        // به‌روزرسانی زمان کاربر جاری
         onlineUsers[onlineUserId] = Date.now();
-        
-        // حذف کاربران غیرفعال (بیشتر از 2 دقیقه)
         const now = Date.now();
         for (let id in onlineUsers) {
-          if (now - onlineUsers[id] > 120000) { // 120000 ms = 2 دقیقه
+          if (now - onlineUsers[id] > 120000) {
             delete onlineUsers[id];
           }
         }
-        
-        // ذخیره در دیتابیس
         await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json', 'X-Master-Key': API_KEY },
           body: JSON.stringify({ ...data.record, onlineUsers })
         });
-        
-        // نمایش تعداد آنلاین
         const count = Object.keys(onlineUsers).length;
         const onlineSpan = document.getElementById('onlineCount');
         if (onlineSpan) onlineSpan.textContent = count;
-      } catch(e) {
-        console.error("Error updating online users:", e);
-      }
+      } catch(e) { console.error("Error updating online users:", e); }
     }
 
-    // هر 45 ثانیه به‌روزرسانی (برای جلوگیری از هنگ)
     setInterval(updateOnlineUsers, 45000);
     
-    // هنگام بسته شدن صفحه، کاربر را حذف کن
     window.addEventListener('beforeunload', async () => {
       try {
         const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, { headers: { 'X-Master-Key': API_KEY } });
@@ -643,11 +652,6 @@
       } catch(e) {}
     });
     
-    // بارگذاری اولیه
-    (async () => {
-      await updateOnlineUsers();
-    })();
-
     // ==================== بقیه توابع (بدون تغییر) ====================
     function applyBackgroundSettings() {
       const body = document.getElementById('mainBody');
@@ -856,6 +860,9 @@
       updatePollUI();
       renderAdsToPage();
       renderAdsManager();
+      // نمایش تعداد کل بازدیدکنندگان در پنل مدیریت
+      const totalSpan = document.getElementById('totalVisitorsDisplay');
+      if (totalSpan) totalSpan.textContent = siteData.totalVisitors || 0;
     }
     
     document.getElementById('bgTypeSelect')?.addEventListener('change', (e) => {
@@ -986,7 +993,14 @@
     
     document.querySelectorAll('.poll-option').forEach(opt => { opt.removeEventListener('click', pollClickHandler); opt.addEventListener('click', pollClickHandler); });
     
-    (async function init() { await loadDataFromServer(); applyDataToPage(); showPage('home'); initFeatureCards(); })();
+    (async function init() { 
+      await loadDataFromServer(); 
+      applyDataToPage(); 
+      showPage('home'); 
+      initFeatureCards();
+      await updateTotalVisitors();   // ثبت بازدیدکننده جدید در صورت لزوم
+      updateOnlineUsers();           // شروع به‌روزرسانی آنلاین
+    })();
   </script>
 </body>
 </html>
