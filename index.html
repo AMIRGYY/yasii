@@ -227,9 +227,9 @@
       <div class="absolute inset-0 bg-[radial-gradient(at_center,#22c55e_0%,transparent_70%)] opacity-10"></div>
       <div class="max-w-5xl mx-auto text-center px-6 relative z-10">
         <div id="logoContainer" class="w-60 h-60 mx-auto mb-8 rounded-3xl border-4 border-green-500/30 bg-zinc-900/80 overflow-hidden shadow-2xl cursor-pointer transition-all">
-          <img id="mainLogo" src="IMG_20260504_160002_753.jpg" class="w-full h-full object-contain p-6">
+          <img id="mainLogo" src="https://placehold.co/400x400/1e2937/22c55e?text=🤖%20Batman" class="w-full h-full object-contain p-6">
         </div>
-        <p class="text-green-400 text-sm mb-4" id="logoHint"></p>
+        <p class="text-green-400 text-sm mb-4" id="logoHint">🔒 برای تغییر لوگو با ادمین تماس بگیرید</p>
         <h1 id="mainTitle" class="text-5xl md:text-6xl font-bold mb-6 neon-text" style="color: #22c55e">ربات مدیریت گروه بتمن</h1>
         <p class="text-2xl text-green-400 mb-4">BatmanRH ✓</p>
         <p class="text-lg text-zinc-400 mb-12">مدیریت هوشمند و قدرتمند گروه‌های روبیکا</p>
@@ -297,101 +297,62 @@
           <p class="text-zinc-500 text-sm mt-3">آپدیت لحظه‌ای</p>
         </div>
 
-           // ==================== نظرسنجی دیتابیسی با محدودیت یک بار نظر ====================
-    let hasUserVoted = localStorage.getItem('batmanPollVoted') === 'true';
-    
-    function updatePollUI() {
-      const votes = siteData.pollVotes || { عالی: 0, خوب: 0, "نیاز به بهبود": 0 };
-      const total = (votes['عالی'] || 0) + (votes['خوب'] || 0) + (votes['نیاز به بهبود'] || 0);
-      
-      const percent1 = total === 0 ? 0 : ((votes['عالی'] || 0) / total * 100).toFixed(0);
-      const percent2 = total === 0 ? 0 : ((votes['خوب'] || 0) / total * 100).toFixed(0);
-      const percent3 = total === 0 ? 0 : ((votes['نیاز به بهبود'] || 0) / total * 100).toFixed(0);
-      
-      const pollPercent1 = document.getElementById('pollPercent1');
-      const pollPercent2 = document.getElementById('pollPercent2');
-      const pollPercent3 = document.getElementById('pollPercent3');
-      const pollBar1 = document.getElementById('pollBar1');
-      const pollBar2 = document.getElementById('pollBar2');
-      const pollBar3 = document.getElementById('pollBar3');
-      const pollMessage = document.getElementById('pollMessage');
-      const totalVotesDisplay = document.getElementById('totalVotesDisplay');
-      const pollUserStatus = document.getElementById('pollUserStatus');
-      
-      if(pollPercent1) pollPercent1.textContent = percent1 + '%';
-      if(pollPercent2) pollPercent2.textContent = percent2 + '%';
-      if(pollPercent3) pollPercent3.textContent = percent3 + '%';
-      if(pollBar1) pollBar1.style.width = percent1 + '%';
-      if(pollBar2) pollBar2.style.width = percent2 + '%';
-      if(pollBar3) pollBar3.style.width = percent3 + '%';
-      if(totalVotesDisplay) totalVotesDisplay.textContent = `📊 مجموع آراء: ${total} نفر`;
-      
-      if(pollMessage) {
-        if(total === 0) pollMessage.innerHTML = '✨ اولین نفری باشید که نظر می‌دهید!';
-        else pollMessage.innerHTML = `✅ ${total} نفر تاکنون نظر داده‌اند. ممنون از شما!`;
-      }
-      
-      // نمایش وضعیت نظر دادن کاربر
-      if(pollUserStatus) {
-        if(hasUserVoted) {
-          pollUserStatus.innerHTML = '✅ شما قبلاً نظر خود را ثبت کرده‌اید. ممنون از مشارکت شما!';
-          pollUserStatus.classList.add('text-green-400');
-        } else {
-          pollUserStatus.innerHTML = '✨ هر کاربر فقط یک بار می‌تواند نظر دهد. نظر خود را ثبت کنید!';
-          pollUserStatus.classList.remove('text-green-400');
-        }
-      }
-      
-      // غیرفعال کردن گزینه‌ها اگر کاربر قبلاً نظر داده باشد
-      const pollOptions = document.querySelectorAll('.poll-option');
-      if(hasUserVoted) {
-        pollOptions.forEach(opt => {
-          opt.style.opacity = '0.5';
-          opt.style.cursor = 'not-allowed';
-          opt.classList.add('disabled');
-        });
-      } else {
-        pollOptions.forEach(opt => {
-          opt.style.opacity = '1';
-          opt.style.cursor = 'pointer';
-          opt.classList.remove('disabled');
-        });
-      }
-    }
-    
-    async function addPollVote(choice) {
-      // بررسی اینکه کاربر قبلاً نظر داده یا نه
-      if(hasUserVoted) {
-        alert('❌ شما قبلاً نظر خود را ثبت کرده‌اید! هر کاربر فقط یک بار می‌تواند نظر دهد.');
-        return;
-      }
-      
-      if(!siteData.pollVotes) siteData.pollVotes = { عالی: 0, خوب: 0, "نیاز به بهبود": 0 };
-      siteData.pollVotes[choice]++;
-      await saveDataToServer();
-      
-      // ذخیره در localStorage که این کاربر نظر داده است
-      localStorage.setItem('batmanPollVoted', 'true');
-      hasUserVoted = true;
-      
-      updatePollUI();
-      alert(`✅ نظر شما (${choice}) با موفقیت ثبت شد و برای همه نمایش داده می‌شود!`);
-    }
-    
-    // نظرسنجی - رویداد کلیک (فقط اگر قبلاً نظر نداده باشد)
-    document.querySelectorAll('.poll-option').forEach(opt => {
-      opt.removeEventListener('click', pollClickHandler);
-      opt.addEventListener('click', pollClickHandler);
-    });
-    
-    function pollClickHandler() {
-      if(hasUserVoted) {
-        alert('❌ شما قبلاً نظر خود را ثبت کرده‌اید! هر کاربر فقط یک بار می‌تواند نظر دهد.');
-        return;
-      }
-      const value = this.getAttribute('data-poll-value');
-      addPollVote(value);
-    }
+        <!-- نظرسنجی دیتابیسی -->
+        <div class="bg-zinc-900/80 border border-white/10 rounded-3xl p-8">
+          <div class="text-center mb-8">
+            <i class="fas fa-chart-simple text-5xl text-green-400 mb-3"></i>
+            <h2 class="text-3xl font-bold text-green-400">📊 نظر سنجی</h2>
+            <p class="text-zinc-400 mt-2">کیفیت ربات بتمن را چگونه ارزیابی می‌کنید؟</p>
+            <p class="text-xs text-zinc-500 mt-1">✨ نظرات شما در دیتابیس ذخیره می‌شود و همه می‌بینند</p>
+          </div>
+          
+          <div id="pollContainer" class="space-y-4">
+            <div class="poll-option bg-zinc-800/50 border border-zinc-700 rounded-2xl p-4 flex justify-between items-center hover:border-green-500 transition-all" data-poll-value="عالی">
+              <div class="flex items-center gap-3">
+                <span class="text-3xl">⭐</span>
+                <span class="text-lg font-bold">عالی</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-32 bg-zinc-700 rounded-full h-2 overflow-hidden">
+                  <div id="pollBar1" class="h-full bg-green-500 rounded-full" style="width: 0%"></div>
+                </div>
+                <span id="pollPercent1" class="font-bold text-green-400 text-lg w-12">0%</span>
+              </div>
+            </div>
+            
+            <div class="poll-option bg-zinc-800/50 border border-zinc-700 rounded-2xl p-4 flex justify-between items-center hover:border-green-500 transition-all" data-poll-value="خوب">
+              <div class="flex items-center gap-3">
+                <span class="text-3xl">👍</span>
+                <span class="text-lg font-bold">خوب</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-32 bg-zinc-700 rounded-full h-2 overflow-hidden">
+                  <div id="pollBar2" class="h-full bg-green-500 rounded-full" style="width: 0%"></div>
+                </div>
+                <span id="pollPercent2" class="font-bold text-green-400 text-lg w-12">0%</span>
+              </div>
+            </div>
+            
+            <div class="poll-option bg-zinc-800/50 border border-zinc-700 rounded-2xl p-4 flex justify-between items-center hover:border-green-500 transition-all" data-poll-value="نیاز به بهبود">
+              <div class="flex items-center gap-3">
+                <span class="text-3xl">🔄</span>
+                <span class="text-lg font-bold">نیاز به بهبود</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-32 bg-zinc-700 rounded-full h-2 overflow-hidden">
+                  <div id="pollBar3" class="h-full bg-green-500 rounded-full" style="width: 0%"></div>
+                </div>
+                <span id="pollPercent3" class="font-bold text-green-400 text-lg w-12">0%</span>
+              </div>
+            </div>
+          </div>
+          
+          <div id="pollMessage" class="text-center text-zinc-500 mt-6 text-sm"></div>
+          <div id="totalVotesDisplay" class="text-center text-zinc-600 text-xs mt-2"></div>
+        </div>
+      </div>
+    </section>
+  </div>
 
   <!-- صفحه 4: لینکدونی -->
   <div id="linkdonationPage" class="page">
@@ -442,17 +403,16 @@
           <div class="space-y-4 text-right">
             <div class="bg-zinc-800/50 rounded-2xl p-4 flex items-center gap-4">
               <i class="fab fa-rubika text-2xl text-green-400"></i>
-              <div><p class="text-zinc-400 text-sm">آیدی مالک</p><a href="https://rubika.ir/@Bvvhjvd" target="_blank" class="text-green-400 font-bold hover:underline text-lg">@Bvvhjvd</a></div>
+              <div><p class="text-zinc-400 text-sm">آیدی سازنده و پشتیبان</p><a href="https://rubika.ir/@Bvvhjvd" target="_blank" class="text-green-400 font-bold hover:underline text-lg">@Bvvhjvd</a></div>
             </div>
             <div class="bg-zinc-800/50 rounded-2xl p-4 flex items-center gap-4">
               <i class="fab fa-rubika text-2xl text-green-400"></i>
-              <div><p class="text-zinc-400 text-sm">آیدی سازنده</p><a href="https://rubika.ir/@AMIRYZ_F26" target="_blank" class="text-green-400 font-bold hover:underline text-lg">@AMIRYZ_F26</a></div>
+              <div><p class="text-zinc-400 text-sm">آیدی ادمین</p><a href="https://rubika.ir/@AMIRYZ_F26" target="_blank" class="text-green-400 font-bold hover:underline text-lg">@AMIRYZ_F26</a></div>
             </div>
           </div>
           <div class="mt-8 pt-6 border-t border-white/10">
-            <p class="text-zinc-400 text-sm">📧 ایمیل پشتیبانی: mahdikhashy83@gmail.com </p>
-            <p class="text-zinc-400 text-sm mt-2">⏰ ساعات پاسخگویی:24 ساعته فعال </p>
-			  <p class="text-zinc-400 text-sm mt-2">شماره تماس:*********** </p>
+            <p class="text-zinc-400 text-sm">📧 ایمیل پشتیبانی: support@batmanrh.com</p>
+            <p class="text-zinc-400 text-sm mt-2">⏰ ساعات پاسخگویی: ۱۰ صبح تا ۸ شب</p>
           </div>
         </div>
       </div>
@@ -479,7 +439,7 @@
   </div>
 
   <footer class="py-8 text-center text-zinc-500 text-sm border-t border-white/10">
-    © 1405 - ربات مدیریت گروه بتمن | تمامی حقوق محفوظ است
+    © ۱۴۰۴ - ربات مدیریت گروه بتمن | BatmanRH
   </footer>
 
   <script>
@@ -520,80 +480,45 @@
       return false;
     }
     
-      <!-- صفحه 3: نظرسنجی (با دیتابیس و محدودیت یک بار نظر) -->
-  <div id="surveyPage" class="page">
-    <section class="py-20">
-      <div class="max-w-4xl mx-auto px-6">
-        
-        <!-- آمار آنلاین -->
-        <div class="text-center mb-10 bg-black/50 rounded-3xl p-8">
-          <div class="flex items-center justify-center gap-3 mb-2">
-            <i class="fas fa-circle text-green-500 text-xs animate-pulse"></i>
-            <p class="text-zinc-400 text-lg">👥 کاربران آنلاین</p>
-          </div>
-          <div class="flex items-baseline justify-center gap-4">
-            <span class="counter text-green-500" id="onlineCount">156</span>
-            <span class="text-2xl text-green-400">نفر</span>
-          </div>
-          <p class="text-zinc-500 text-sm mt-3">آپدیت لحظه‌ای</p>
-        </div>
-
-        <!-- نظرسنجی دیتابیسی با محدودیت یک بار نظر -->
-        <div class="bg-zinc-900/80 border border-white/10 rounded-3xl p-8">
-          <div class="text-center mb-8">
-            <i class="fas fa-chart-simple text-5xl text-green-400 mb-3"></i>
-            <h2 class="text-3xl font-bold text-green-400">📊 نظر سنجی</h2>
-            <p class="text-zinc-400 mt-2">کیفیت ربات بتمن را چگونه ارزیابی می‌کنید؟</p>
-            <p class="text-xs text-zinc-500 mt-1" id="pollUserStatus">✨ هر کاربر فقط یک بار می‌تواند نظر دهد</p>
-          </div>
-          
-          <div id="pollContainer" class="space-y-4">
-            <div class="poll-option bg-zinc-800/50 border border-zinc-700 rounded-2xl p-4 flex justify-between items-center hover:border-green-500 transition-all" data-poll-value="عالی">
-              <div class="flex items-center gap-3">
-                <span class="text-3xl">⭐</span>
-                <span class="text-lg font-bold">عالی</span>
-              </div>
-              <div class="flex items-center gap-3">
-                <div class="w-32 bg-zinc-700 rounded-full h-2 overflow-hidden">
-                  <div id="pollBar1" class="h-full bg-green-500 rounded-full" style="width: 0%"></div>
-                </div>
-                <span id="pollPercent1" class="font-bold text-green-400 text-lg w-12">0%</span>
-              </div>
-            </div>
-            
-            <div class="poll-option bg-zinc-800/50 border border-zinc-700 rounded-2xl p-4 flex justify-between items-center hover:border-green-500 transition-all" data-poll-value="خوب">
-              <div class="flex items-center gap-3">
-                <span class="text-3xl">👍</span>
-                <span class="text-lg font-bold">خوب</span>
-              </div>
-              <div class="flex items-center gap-3">
-                <div class="w-32 bg-zinc-700 rounded-full h-2 overflow-hidden">
-                  <div id="pollBar2" class="h-full bg-green-500 rounded-full" style="width: 0%"></div>
-                </div>
-                <span id="pollPercent2" class="font-bold text-green-400 text-lg w-12">0%</span>
-              </div>
-            </div>
-            
-            <div class="poll-option bg-zinc-800/50 border border-zinc-700 rounded-2xl p-4 flex justify-between items-center hover:border-green-500 transition-all" data-poll-value="نیاز به بهبود">
-              <div class="flex items-center gap-3">
-                <span class="text-3xl">🔄</span>
-                <span class="text-lg font-bold">نیاز به بهبود</span>
-              </div>
-              <div class="flex items-center gap-3">
-                <div class="w-32 bg-zinc-700 rounded-full h-2 overflow-hidden">
-                  <div id="pollBar3" class="h-full bg-green-500 rounded-full" style="width: 0%"></div>
-                </div>
-                <span id="pollPercent3" class="font-bold text-green-400 text-lg w-12">0%</span>
-              </div>
-            </div>
-          </div>
-          
-          <div id="pollMessage" class="text-center text-zinc-500 mt-6 text-sm"></div>
-          <div id="totalVotesDisplay" class="text-center text-zinc-600 text-xs mt-2"></div>
-        </div>
-      </div>
-    </section>
-  </div>
+    // ==================== نظرسنجی دیتابیسی ====================
+    function updatePollUI() {
+      const votes = siteData.pollVotes || { عالی: 0, خوب: 0, "نیاز به بهبود": 0 };
+      const total = (votes['عالی'] || 0) + (votes['خوب'] || 0) + (votes['نیاز به بهبود'] || 0);
+      
+      const percent1 = total === 0 ? 0 : ((votes['عالی'] || 0) / total * 100).toFixed(0);
+      const percent2 = total === 0 ? 0 : ((votes['خوب'] || 0) / total * 100).toFixed(0);
+      const percent3 = total === 0 ? 0 : ((votes['نیاز به بهبود'] || 0) / total * 100).toFixed(0);
+      
+      const pollPercent1 = document.getElementById('pollPercent1');
+      const pollPercent2 = document.getElementById('pollPercent2');
+      const pollPercent3 = document.getElementById('pollPercent3');
+      const pollBar1 = document.getElementById('pollBar1');
+      const pollBar2 = document.getElementById('pollBar2');
+      const pollBar3 = document.getElementById('pollBar3');
+      const pollMessage = document.getElementById('pollMessage');
+      const totalVotesDisplay = document.getElementById('totalVotesDisplay');
+      
+      if(pollPercent1) pollPercent1.textContent = percent1 + '%';
+      if(pollPercent2) pollPercent2.textContent = percent2 + '%';
+      if(pollPercent3) pollPercent3.textContent = percent3 + '%';
+      if(pollBar1) pollBar1.style.width = percent1 + '%';
+      if(pollBar2) pollBar2.style.width = percent2 + '%';
+      if(pollBar3) pollBar3.style.width = percent3 + '%';
+      if(totalVotesDisplay) totalVotesDisplay.textContent = `📊 مجموع آراء: ${total} نفر`;
+      
+      if(pollMessage) {
+        if(total === 0) pollMessage.innerHTML = '✨ اولین نفری باشید که نظر می‌دهید!';
+        else pollMessage.innerHTML = `✅ ${total} نفر تاکنون نظر داده‌اند. ممنون از شما!`;
+      }
+    }
+    
+    async function addPollVote(choice) {
+      if(!siteData.pollVotes) siteData.pollVotes = { عالی: 0, خوب: 0, "نیاز به بهبود": 0 };
+      siteData.pollVotes[choice]++;
+      await saveDataToServer();
+      updatePollUI();
+      alert(`✅ نظر شما (${choice}) با موفقیت ثبت شد و برای همه نمایش داده می‌شود!`);
+    }
     
     // ==================== آمار آنلاین (شبیه‌سازی پویا) ====================
     let onlineCount = Math.floor(Math.random() * 200) + 100;
