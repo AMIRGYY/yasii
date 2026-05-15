@@ -30,8 +30,6 @@
     .card-hover { transition: all 0.4s ease; }
     .card-hover:hover { transform: translateY(-12px); box-shadow: 0 20px 25px -5px rgba(34, 197, 94, 0.3); }
     .counter { font-size: 3.8rem; font-weight: bold; }
-    .feature-card { transition: all 0.3s ease; cursor: pointer; }
-    .feature-card:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(34,197,94,0.2); }
     .page { display: none; }
     .page.active { display: block; animation: fadeIn 0.3s ease; }
     @keyframes fadeIn {
@@ -40,6 +38,27 @@
     }
     .nav-btn { transition: all 0.3s ease; cursor: pointer; }
     .nav-btn.active { background: currentColor; color: white; }
+    
+    /* انیمیشن برای کارت قابلیت‌ها */
+    .feature-card {
+      transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      cursor: pointer;
+      transform-style: preserve-3d;
+      min-height: 160px;
+    }
+    .feature-card.flipped {
+      transform: rotateY(180deg);
+    }
+    .feature-card .front, .feature-card .back {
+      backface-visibility: hidden;
+      transition: all 0.5s ease;
+    }
+    .feature-card .back {
+      transform: rotateY(180deg);
+      display: none;
+    }
+    .feature-card.flipped .front { display: none; }
+    .feature-card.flipped .back { display: flex; }
     
     .admin-btn {
       position: fixed;
@@ -78,7 +97,7 @@
       background: #1e2937;
       border-radius: 32px;
       padding: 30px;
-      max-width: 600px;
+      max-width: 650px;
       width: 90%;
       max-height: 85vh;
       overflow-y: auto;
@@ -146,16 +165,17 @@
     .poll-option.disabled { opacity: 0.5; cursor: not-allowed; }
     .poll-option.disabled:hover { transform: none; background: none; }
     .ad-preview-img { width: 50px; height: 50px; object-fit: cover; border-radius: 12px; }
+    .bg-preview-box { width: 100%; height: 80px; border-radius: 16px; margin-top: 10px; background-size: cover; background-position: center; }
   </style>
 </head>
-<body id="mainBody" class="bg-zinc-950 text-white hero-bg min-h-screen">
+<body id="mainBody" class="bg-zinc-950 text-white min-h-screen">
 
-  <!-- دکمه پنل مدیریت -->
+ 
   <div class="admin-btn" id="adminBtn">
     <i class="fas fa-cog"></i>
   </div>
 
-  <!-- مودال پنل مدیریت -->
+
   <div id="adminModal" class="admin-modal">
     <div class="admin-box">
       <div class="flex justify-between items-center mb-6">
@@ -174,6 +194,25 @@
             <input type="color" id="siteColor" value="#22c55e" class="w-full h-12 rounded-xl cursor-pointer">
           </div>
           
+          <!-- تنظیمات پس زمینه -->
+          <div class="border-t border-zinc-700 pt-3">
+            <h3 class="font-bold text-green-400 mb-3">🖼️ تنظیمات پس زمینه سایت</h3>
+            <div class="space-y-3">
+              <select id="bgTypeSelect" class="w-full bg-zinc-800 border border-zinc-700 rounded-xl p-2">
+                <option value="gradient">گرادیانت پیش‌فرض</option>
+                <option value="dark">تیره ساده</option>
+                <option value="light">روشن ساده</option>
+                <option value="custom">عکس دلخواه</option>
+              </select>
+              <div id="customBgSection" style="display: none;">
+                <button id="uploadBgBtn" class="w-full bg-blue-600 hover:bg-blue-500 rounded-xl p-2 text-sm">📁 آپلود عکس پس زمینه</button>
+                <div id="bgPreview" class="bg-preview-box mt-2" style="display: none;"></div>
+                <button id="removeBgBtn" class="w-full bg-red-600/50 hover:bg-red-600 rounded-xl p-2 text-sm mt-2" style="display: none;">🗑️ حذف عکس پس زمینه</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- تبلیغات با قابلیت آپلود عکس و فیلم -->
           <div class="border-t border-zinc-700 pt-3">
             <h3 class="font-bold text-green-400 mb-3">📢 مدیریت تبلیغات</h3>
             <div id="adsManagerList" class="space-y-4 mb-4"></div>
@@ -199,7 +238,6 @@
       <h3 class="text-center font-bold mb-4 text-green-400">🎨 تنظیمات نمایش</h3>
       <div class="mb-3"><label class="text-sm block mb-1">رنگ اصلی</label><input type="color" id="userColorPicker" value="#22c55e" class="w-full h-10 rounded-xl cursor-pointer bg-transparent border border-zinc-700"></div>
       <div class="mb-3"><label class="text-sm block mb-1">سایز فونت</label><div class="flex gap-2"><button id="fontSmall" class="flex-1 py-2 rounded-xl text-sm bg-zinc-800">کوچک</button><button id="fontMedium" class="flex-1 py-2 rounded-xl text-sm bg-green-600">متوسط</button><button id="fontLarge" class="flex-1 py-2 rounded-xl text-sm bg-zinc-800">بزرگ</button></div></div>
-      <div class="mb-3"><label class="text-sm block mb-1">پس‌زمینه</label><div class="flex gap-2"><button id="bgGradient" class="flex-1 py-2 rounded-xl text-sm bg-zinc-800">گرادیانت</button><button id="bgDark" class="flex-1 py-2 rounded-xl text-sm bg-zinc-800">تیره</button><button id="BgLight" class="flex-1 py-2 rounded-xl text-sm bg-zinc-800">روشن</button></div></div>
       <button id="resetUserSettings" class="w-full mt-2 py-2 rounded-xl text-sm bg-red-600/50 hover:bg-red-600">🔄 بازنشانی</button>
     </div>
   </div>
@@ -257,18 +295,72 @@
     </section>
   </div>
 
-  <!-- صفحه 2: قابلیت‌ها -->
+  <!-- صفحه 2: قابلیت‌ها (با انیمیشن flip) -->
   <div id="featuresPage" class="page">
     <section class="py-20">
       <div class="max-w-5xl mx-auto px-6">
         <h2 class="text-4xl font-bold text-center mb-12 text-green-400">⚡ قابلیت‌های ربات بتمن</h2>
         <div class="grid grid-cols-2 md:grid-cols-3 gap-5">
-          <div class="feature-card bg-zinc-900 p-5 rounded-2xl border border-white/10 text-center"><div class="text-4xl mb-3">🛡️</div><h3 class="font-bold">مدیریت کاربران</h3><p class="text-zinc-400 text-sm">اخراج، سکوت، بن</p></div>
-          <div class="feature-card bg-zinc-900 p-5 rounded-2xl border border-white/10 text-center"><div class="text-4xl mb-3">📛</div><h3 class="font-bold">آنتی اسپم</h3><p class="text-zinc-400 text-sm">حذف خودکار تبلیغات</p></div>
-          <div class="feature-card bg-zinc-900 p-5 rounded-2xl border border-white/10 text-center"><div class="text-4xl mb-3">🔍</div><h3 class="font-bold">فیلتر پیشرفته</h3><p class="text-zinc-400 text-sm">کلمات، لینک، فلود</p></div>
-          <div class="feature-card bg-zinc-900 p-5 rounded-2xl border border-white/10 text-center"><div class="text-4xl mb-3">💬</div><h3 class="font-bold">ربات سخنگو</h3><p class="text-zinc-400 text-sm">چت هوشمند</p></div>
-          <div class="feature-card bg-zinc-900 p-5 rounded-2xl border border-white/10 text-center"><div class="text-4xl mb-3">📊</div><h3 class="font-bold">داشبورد</h3><p class="text-zinc-400 text-sm">کنترل سریع</p></div>
-          <div class="feature-card bg-zinc-900 p-5 rounded-2xl border border-white/10 text-center"><div class="text-4xl mb-3">⚡</div><h3 class="font-bold">رایگان و پایدار</h3><p class="text-zinc-400 text-sm">بدون محدودیت</p></div>
+          <div class="feature-card bg-zinc-900 p-5 rounded-2xl border border-white/10 text-center relative" style="min-height: 180px;">
+            <div class="front flex flex-col items-center">
+              <div class="text-4xl mb-3">🛡️</div>
+              <h3 class="font-bold">مدیریت کاربران</h3>
+              <p class="text-zinc-400 text-sm">اخراج، سکوت، بن</p>
+            </div>
+            <div class="back hidden flex-col items-center justify-center absolute inset-0 bg-zinc-800 rounded-2xl p-4">
+              <p class="text-sm text-zinc-300 text-center">امکانات: اخراج کاربر، سکوت زمان‌دار، بن دائمی، ارتقا به ادمین، معافیت از قوانین</p>
+            </div>
+          </div>
+          <div class="feature-card bg-zinc-900 p-5 rounded-2xl border border-white/10 text-center relative" style="min-height: 180px;">
+            <div class="front flex flex-col items-center">
+              <div class="text-4xl mb-3">📛</div>
+              <h3 class="font-bold">آنتی اسپم</h3>
+              <p class="text-zinc-400 text-sm">حذف خودکار تبلیغات</p>
+            </div>
+            <div class="back hidden flex-col items-center justify-center absolute inset-0 bg-zinc-800 rounded-2xl p-4">
+              <p class="text-sm text-zinc-300 text-center">تشخیص و حذف خودکار پیام‌های تبلیغاتی، لینک‌های تکراری و هرزنامه</p>
+            </div>
+          </div>
+          <div class="feature-card bg-zinc-900 p-5 rounded-2xl border border-white/10 text-center relative" style="min-height: 180px;">
+            <div class="front flex flex-col items-center">
+              <div class="text-4xl mb-3">🔍</div>
+              <h3 class="font-bold">فیلتر پیشرفته</h3>
+              <p class="text-zinc-400 text-sm">کلمات، لینک، فلود</p>
+            </div>
+            <div class="back hidden flex-col items-center justify-center absolute inset-0 bg-zinc-800 rounded-2xl p-4">
+              <p class="text-sm text-zinc-300 text-center">فیلتر کلمات نامناسب، جلوگیری از ارسال لینک، کنترل تعداد پیام‌های پشت سر هم</p>
+            </div>
+          </div>
+          <div class="feature-card bg-zinc-900 p-5 rounded-2xl border border-white/10 text-center relative" style="min-height: 180px;">
+            <div class="front flex flex-col items-center">
+              <div class="text-4xl mb-3">💬</div>
+              <h3 class="font-bold">ربات سخنگو</h3>
+              <p class="text-zinc-400 text-sm">چت هوشمند</p>
+            </div>
+            <div class="back hidden flex-col items-center justify-center absolute inset-0 bg-zinc-800 rounded-2xl p-4">
+              <p class="text-sm text-zinc-300 text-center">پاسخگویی خودکار به سوالات، قابلیت یادگیری شخصی و عمومی، مکالمه هوشمند</p>
+            </div>
+          </div>
+          <div class="feature-card bg-zinc-900 p-5 rounded-2xl border border-white/10 text-center relative" style="min-height: 180px;">
+            <div class="front flex flex-col items-center">
+              <div class="text-4xl mb-3">📊</div>
+              <h3 class="font-bold">داشبورد</h3>
+              <p class="text-zinc-400 text-sm">کنترل سریع</p>
+            </div>
+            <div class="back hidden flex-col items-center justify-center absolute inset-0 bg-zinc-800 rounded-2xl p-4">
+              <p class="text-sm text-zinc-300 text-center">مشاهده و کنترل وضعیت قفل‌ها، آمار گروه، تنظیمات ربات از یک پنل حرفه‌ای</p>
+            </div>
+          </div>
+          <div class="feature-card bg-zinc-900 p-5 rounded-2xl border border-white/10 text-center relative" style="min-height: 180px;">
+            <div class="front flex flex-col items-center">
+              <div class="text-4xl mb-3">⚡</div>
+              <h3 class="font-bold">رایگان و پایدار</h3>
+              <p class="text-zinc-400 text-sm">بدون محدودیت</p>
+            </div>
+            <div class="back hidden flex-col items-center justify-center absolute inset-0 bg-zinc-800 rounded-2xl p-4">
+              <p class="text-sm text-zinc-300 text-center">همیشه رایگان، بدون محدودیت تعداد کاربران، آپدیت‌های مداوم و پشتیبانی ۲۴ ساعته</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -320,7 +412,7 @@
     </section>
   </div>
 
-  <!-- صفحه 4: لینکدونی (فقط دکمه با لینک به ربات) -->
+  <!-- صفحه 4: لینکدونی -->
   <div id="linkdonationPage" class="page">
     <section class="py-20 min-h-[60vh] flex items-center justify-center">
       <div class="max-w-3xl mx-auto px-6 w-full text-center">
@@ -368,14 +460,14 @@
           </div>
           <div class="mt-8 pt-6 border-t border-white/10">
             <p class="text-zinc-400 text-sm">📧 ایمیل پشتیبانی: mahdikhashy83@gmail.com</p>
-            <p class="text-zinc-400 text-sm mt-2">⏰ ساعات پاسخگویی:24 ساعته</p>
+            <p class="text-zinc-400 text-sm mt-2">⏰ ساعات پاسخگویی: 24ساعته فعال</p>
           </div>
         </div>
       </div>
     </section>
   </div>
 
-  <!-- تبلیغات پایین صفحه (فقط در صورتی که تبلیغ فعال باشد نمایش داده می‌شود) -->
+  <!-- تبلیغات پایین صفحه -->
   <div id="adsSection" class="max-w-5xl mx-auto px-6 py-10" style="display: none;">
     <div class="border-t border-white/10 pt-10">
       <h3 class="text-center text-zinc-400 text-sm mb-6"><i class="fas fa-ad mr-2"></i> تبلیغات</h3>
@@ -384,7 +476,7 @@
   </div>
 
   <footer class="py-8 text-center text-zinc-500 text-sm border-t border-white/10">
-    © 1405 - ربات مدیریت گروه بتمن | تمامی حقوق محفوظ است
+    © 1405 - ربات مدیریت گروه بتمن | تمتمی حقوق محفوظ است
   </footer>
 
   <script>
@@ -394,9 +486,11 @@
     
     const DEFAULT_DATA = {
       siteColor: "#22c55e",
+      bgType: "gradient",
+      bgImage: "",
       botLocks: { link: false, spam: false, foul: false, media: false, file: false, flood: false },
       pollVotes: { عالی: 0, خوب: 0, "نیاز به بهبود": 0 },
-      ads: []  // آرایه تبلیغات: هر تبلیغ شامل { id, title, link, image }
+      ads: []
     };
     
     let siteData = { ...DEFAULT_DATA };
@@ -420,7 +514,32 @@
       return false;
     }
     
-    // ==================== تبلیغات ====================
+    // ==================== تنظیمات پس زمینه ====================
+    function applyBackgroundSettings() {
+      const body = document.getElementById('mainBody');
+      const bgType = siteData.bgType || 'gradient';
+      const bgImage = siteData.bgImage || '';
+      
+      if(bgType === 'gradient') {
+        body.className = 'bg-zinc-950 text-white hero-bg min-h-screen';
+        body.style.background = '';
+        body.style.animation = 'gradient 15s ease infinite';
+      } else if(bgType === 'dark') {
+        body.className = 'bg-zinc-950 text-white min-h-screen';
+        body.style.background = '#0a0a0a';
+        body.style.animation = 'none';
+      } else if(bgType === 'light') {
+        body.className = 'bg-gray-100 text-black min-h-screen';
+        body.style.background = '#f5f5f5';
+        body.style.animation = 'none';
+      } else if(bgType === 'custom' && bgImage) {
+        body.className = 'text-white min-h-screen';
+        body.style.background = `url('${bgImage}') center/cover fixed`;
+        body.style.animation = 'none';
+      }
+    }
+    
+    // ==================== تبلیغات با آپلود مستقیم عکس و فیلم ====================
     function renderAdsToPage() {
       const ads = siteData.ads || [];
       const adsSection = document.getElementById('adsSection');
@@ -438,10 +557,11 @@
       
       ads.forEach(ad => {
         if(ad.title && ad.link) {
+          const isVideo = ad.mediaType === 'video' && ad.media;
           adsContainer.innerHTML += `
             <a href="${ad.link}" target="_blank" class="ad-card bg-gradient-to-r from-zinc-900 to-zinc-900/80 border border-zinc-700 rounded-2xl p-5 flex items-center gap-4 transition-all hover:border-green-500 no-underline">
-              ${ad.image ? `<img src="${ad.image}" class="w-14 h-14 rounded-xl object-cover">` : `<div class="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center"><i class="fas fa-bullhorn text-green-400 text-xl"></i></div>`}
-              <div class="flex-1"><p class="text-zinc-400 text-xs">تبلیغات</p><p class="text-white font-bold">${ad.title}</p></div>
+              ${isVideo ? `<video src="${ad.media}" class="w-14 h-14 rounded-xl object-cover" muted></video>` : (ad.media ? `<img src="${ad.media}" class="w-14 h-14 rounded-xl object-cover">` : `<div class="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center"><i class="fas fa-bullhorn text-green-400 text-xl"></i></div>`)}
+              <div class="flex-1"><p class="text-zinc-400 text-xs">تبلیغات</p><p class="text-white font-bold">${escapeHtml(ad.title)}</p></div>
               <i class="fas fa-chevron-left text-zinc-500"></i>
             </a>
           `;
@@ -461,19 +581,73 @@
       
       container.innerHTML = '';
       ads.forEach((ad, index) => {
+        const isVideo = ad.mediaType === 'video';
         container.innerHTML += `
           <div class="bg-zinc-800/50 rounded-xl p-4 border border-zinc-700">
             <div class="flex gap-3 mb-3">
-              ${ad.image ? `<img src="${ad.image}" class="w-16 h-16 rounded-xl object-cover">` : `<div class="w-16 h-16 bg-zinc-700 rounded-xl flex items-center justify-center"><i class="fas fa-image text-zinc-500 text-2xl"></i></div>`}
+              ${ad.media ? (isVideo ? `<video src="${ad.media}" class="w-16 h-16 rounded-xl object-cover" id="preview_${index}" muted></video>` : `<img src="${ad.media}" class="w-16 h-16 rounded-xl object-cover" id="preview_${index}">`) : `<div class="w-16 h-16 bg-zinc-700 rounded-xl flex items-center justify-center" id="preview_${index}"><i class="fas fa-image text-zinc-500 text-2xl"></i></div>`}
               <div class="flex-1">
                 <input type="text" id="adTitle_${index}" value="${escapeHtml(ad.title || '')}" placeholder="عنوان تبلیغ" class="w-full bg-zinc-700 border border-zinc-600 rounded-lg p-2 text-sm mb-2">
                 <input type="text" id="adLink_${index}" value="${escapeHtml(ad.link || '')}" placeholder="لینک تبلیغ" class="w-full bg-zinc-700 border border-zinc-600 rounded-lg p-2 text-sm mb-2">
-                <input type="text" id="adImage_${index}" value="${escapeHtml(ad.image || '')}" placeholder="لینک عکس (اختیاری)" class="w-full bg-zinc-700 border border-zinc-600 rounded-lg p-2 text-sm">
+                <div class="flex gap-2">
+                  <input type="text" id="adMedia_${index}" value="${escapeHtml(ad.media || '')}" placeholder="لینک عکس/فیلم" class="flex-1 bg-zinc-700 border border-zinc-600 rounded-lg p-2 text-sm">
+                  <button class="uploadMediaBtn bg-blue-600 hover:bg-blue-500 rounded-lg px-3 text-sm" data-index="${index}">📁 آپلود</button>
+                </div>
+                <div class="flex gap-2 mt-2">
+                  <button class="setAsImageBtn ${ad.mediaType === 'image' ? 'bg-green-600' : 'bg-zinc-700'} rounded-lg px-2 text-xs py-1" data-index="${index}" data-type="image">🖼️ عکس</button>
+                  <button class="setAsVideoBtn ${ad.mediaType === 'video' ? 'bg-green-600' : 'bg-zinc-700'} rounded-lg px-2 text-xs py-1" data-index="${index}" data-type="video">🎬 فیلم</button>
+                </div>
               </div>
             </div>
             <button class="deleteAdBtn w-full bg-red-600/50 hover:bg-red-600 rounded-lg p-2 text-sm" data-id="${ad.id || index}">🗑️ حذف تبلیغ</button>
           </div>
         `;
+      });
+      
+      document.querySelectorAll('.uploadMediaBtn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = btn.getAttribute('data-index');
+          const input = document.createElement('input');
+          input.type = 'file';
+          input.accept = 'image/*,video/*';
+          input.onchange = (e) => {
+            const file = e.target.files[0];
+            if(file) {
+              const reader = new FileReader();
+              reader.onload = (ev) => {
+                const mediaInput = document.getElementById(`adMedia_${idx}`);
+                if(mediaInput) mediaInput.value = ev.target.result;
+                const preview = document.getElementById(`preview_${idx}`);
+                if(preview) {
+                  if(file.type.startsWith('video/')) {
+                    preview.outerHTML = `<video src="${ev.target.result}" class="w-16 h-16 rounded-xl object-cover" id="preview_${idx}" muted></video>`;
+                  } else {
+                    preview.outerHTML = `<img src="${ev.target.result}" class="w-16 h-16 rounded-xl object-cover" id="preview_${idx}">`;
+                  }
+                }
+                if(siteData.ads[idx]) siteData.ads[idx].mediaType = file.type.startsWith('video/') ? 'video' : 'image';
+              };
+              reader.readAsDataURL(file);
+            }
+          };
+          input.click();
+        });
+      });
+      
+      document.querySelectorAll('.setAsImageBtn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = btn.getAttribute('data-index');
+          if(siteData.ads[idx]) siteData.ads[idx].mediaType = 'image';
+          renderAdsManager();
+        });
+      });
+      
+      document.querySelectorAll('.setAsVideoBtn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = btn.getAttribute('data-index');
+          if(siteData.ads[idx]) siteData.ads[idx].mediaType = 'video';
+          renderAdsManager();
+        });
       });
       
       document.querySelectorAll('.deleteAdBtn').forEach(btn => {
@@ -485,25 +659,32 @@
       });
     }
     
-    function escapeHtml(text) { if(!text) return ''; const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
-    
-    document.getElementById('addNewAdBtn')?.addEventListener('click', () => {
-      if(!siteData.ads) siteData.ads = [];
-      const newId = Date.now().toString();
-      siteData.ads.push({ id: newId, title: '', link: '', image: '' });
-      renderAdsManager();
-    });
-    
     function saveAdsFromManager() {
       const ads = siteData.ads || [];
       for(let i = 0; i < ads.length; i++) {
         const titleInput = document.getElementById(`adTitle_${i}`);
         const linkInput = document.getElementById(`adLink_${i}`);
-        const imageInput = document.getElementById(`adImage_${i}`);
+        const mediaInput = document.getElementById(`adMedia_${i}`);
         if(titleInput) ads[i].title = titleInput.value;
         if(linkInput) ads[i].link = linkInput.value;
-        if(imageInput) ads[i].image = imageInput.value;
+        if(mediaInput) ads[i].media = mediaInput.value;
       }
+    }
+    
+    document.getElementById('addNewAdBtn')?.addEventListener('click', () => {
+      if(!siteData.ads) siteData.ads = [];
+      const newId = Date.now().toString();
+      siteData.ads.push({ id: newId, title: '', link: '', media: '', mediaType: 'image' });
+      renderAdsManager();
+    });
+    
+    // ==================== انیمیشن کارت قابلیت‌ها ====================
+    function initFeatureCards() {
+      document.querySelectorAll('.feature-card').forEach(card => {
+        card.addEventListener('click', function() {
+          this.classList.toggle('flipped');
+        });
+      });
     }
     
     // ==================== نظرسنجی ====================
@@ -581,18 +762,81 @@
       });
     }
     
+    function escapeHtml(text) { if(!text) return ''; const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
+    
     function applyDataToPage() {
       applyColor(siteData.siteColor);
+      applyBackgroundSettings();
       if(document.getElementById('siteColor')) document.getElementById('siteColor').value = siteData.siteColor;
+      if(document.getElementById('bgTypeSelect')) document.getElementById('bgTypeSelect').value = siteData.bgType || 'gradient';
+      const customBgSection = document.getElementById('customBgSection');
+      const bgPreview = document.getElementById('bgPreview');
+      const removeBgBtn = document.getElementById('removeBgBtn');
+      if(customBgSection) customBgSection.style.display = (siteData.bgType === 'custom') ? 'block' : 'none';
+      if(bgPreview && siteData.bgImage) {
+        bgPreview.style.display = 'block';
+        bgPreview.style.backgroundImage = `url('${siteData.bgImage}')`;
+      }
+      if(removeBgBtn) removeBgBtn.style.display = siteData.bgImage ? 'block' : 'none';
       renderBotLocks();
       updatePollUI();
       renderAdsToPage();
       renderAdsManager();
     }
     
+    // ==================== تنظیمات پس زمینه در پنل مدیریت ====================
+    document.getElementById('bgTypeSelect')?.addEventListener('change', (e) => {
+      const val = e.target.value;
+      siteData.bgType = val;
+      const customBgSection = document.getElementById('customBgSection');
+      if(customBgSection) customBgSection.style.display = val === 'custom' ? 'block' : 'none';
+      applyBackgroundSettings();
+    });
+    
+    document.getElementById('uploadBgBtn')?.addEventListener('click', () => {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.onchange = (e) => {
+        const file = e.target.files[0];
+        if(file) {
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            siteData.bgImage = ev.target.result;
+            siteData.bgType = 'custom';
+            if(document.getElementById('bgTypeSelect')) document.getElementById('bgTypeSelect').value = 'custom';
+            const bgPreview = document.getElementById('bgPreview');
+            if(bgPreview) {
+              bgPreview.style.display = 'block';
+              bgPreview.style.backgroundImage = `url('${ev.target.result}')`;
+            }
+            const removeBgBtn = document.getElementById('removeBgBtn');
+            if(removeBgBtn) removeBgBtn.style.display = 'block';
+            applyBackgroundSettings();
+          };
+          reader.readAsDataURL(file);
+        }
+      };
+      input.click();
+    });
+    
+    document.getElementById('removeBgBtn')?.addEventListener('click', () => {
+      siteData.bgImage = '';
+      if(siteData.bgType === 'custom') siteData.bgType = 'gradient';
+      if(document.getElementById('bgTypeSelect')) document.getElementById('bgTypeSelect').value = 'gradient';
+      const customBgSection = document.getElementById('customBgSection');
+      if(customBgSection) customBgSection.style.display = 'none';
+      const bgPreview = document.getElementById('bgPreview');
+      if(bgPreview) bgPreview.style.display = 'none';
+      const removeBgBtn = document.getElementById('removeBgBtn');
+      if(removeBgBtn) removeBgBtn.style.display = 'none';
+      applyBackgroundSettings();
+    });
+    
     // ==================== ذخیره تنظیمات ادمین ====================
     document.getElementById('saveAdminSettings')?.addEventListener('click', async () => {
       siteData.siteColor = document.getElementById('siteColor').value;
+      siteData.bgType = document.getElementById('bgTypeSelect').value;
       saveAdsFromManager();
       
       const statusDiv = document.getElementById('saveStatus');
@@ -625,28 +869,18 @@
     // ==================== تنظیمات کاربر ====================
     function applyUserColor(color) { applyColor(color); localStorage.setItem('userColor', color); }
     function applyFontSize(size) { let fontSize = size==='small'?'14px':size==='large'?'18px':'16px'; document.body.style.fontSize = fontSize; localStorage.setItem('fontSize', size); }
-    function applyBgMode(mode) {
-      const body = document.getElementById('mainBody');
-      if(mode === 'gradient') { body.className = 'bg-zinc-950 text-white hero-bg min-h-screen'; body.style.background = ''; }
-      else if(mode === 'dark') { body.className = 'bg-zinc-950 text-white min-h-screen'; body.style.background = '#0a0a0a'; body.style.animation = 'none'; }
-      else if(mode === 'light') { body.className = 'bg-gray-100 text-black min-h-screen'; body.style.background = '#f5f5f5'; body.style.animation = 'none'; }
-      localStorage.setItem('bgMode', mode);
-    }
+    
     const savedUserColor = localStorage.getItem('userColor'); if(savedUserColor && document.getElementById('userColorPicker')) { document.getElementById('userColorPicker').value = savedUserColor; applyUserColor(savedUserColor); }
     const savedFontSize = localStorage.getItem('fontSize'); if(savedFontSize) applyFontSize(savedFontSize);
-    const savedBgMode = localStorage.getItem('bgMode'); if(savedBgMode) applyBgMode(savedBgMode);
     
     document.getElementById('userColorPicker')?.addEventListener('change', (e) => applyUserColor(e.target.value));
     document.getElementById('fontSmall')?.addEventListener('click', () => applyFontSize('small'));
     document.getElementById('fontMedium')?.addEventListener('click', () => applyFontSize('medium'));
     document.getElementById('fontLarge')?.addEventListener('click', () => applyFontSize('large'));
-    document.getElementById('bgGradient')?.addEventListener('click', () => applyBgMode('gradient'));
-    document.getElementById('bgDark')?.addEventListener('click', () => applyBgMode('dark'));
-    document.getElementById('BgLight')?.addEventListener('click', () => applyBgMode('light'));
     document.getElementById('resetUserSettings')?.addEventListener('click', () => {
-      localStorage.removeItem('userColor'); localStorage.removeItem('fontSize'); localStorage.removeItem('bgMode');
+      localStorage.removeItem('userColor'); localStorage.removeItem('fontSize');
       if(document.getElementById('userColorPicker')) document.getElementById('userColorPicker').value = '#22c55e';
-      applyUserColor('#22c55e'); applyFontSize('medium'); applyBgMode('gradient');
+      applyUserColor('#22c55e'); applyFontSize('medium');
       alert('✅ تنظیمات بازگشت!');
     });
     
@@ -692,7 +926,7 @@
     document.querySelectorAll('.poll-option').forEach(opt => { opt.removeEventListener('click', pollClickHandler); opt.addEventListener('click', pollClickHandler); });
     
     // اجرای اولیه
-    (async function init() { await loadDataFromServer(); applyDataToPage(); showPage('home'); })();
+    (async function init() { await loadDataFromServer(); applyDataToPage(); showPage('home'); initFeatureCards(); })();
   </script>
 </body>
 </html>
