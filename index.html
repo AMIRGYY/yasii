@@ -4,18 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
   <title>ربات مدیریت گروه بتمن | BatmanRH</title>
-  <meta name="description" content="ربات بتمن، دستیار هوشمند و قدرتمند برای مدیریت گروه‌های روبیکا. قفل لینک، اسپم، فحاشی، مدیریت کاربران و ربات سخنگو">
-  <meta name="keywords" content="ربات بتمن, مدیریت گروه روبیکا, قفل لینک, آنتی اسپم, ربات سخنگو">
+  <meta name="description" content="ربات بتمن، دستیار هوشمند و قدرتمند برای مدیریت گروه‌های روبیکا">
+  <meta name="keywords" content="ربات بتمن, مدیریت گروه روبیکا, قفل لینک, آنتی اسپم">
   <meta name="author" content="BatmanRH Team">
   <meta property="og:title" content="ربات مدیریت گروه بتمن | BatmanRH">
   <meta property="og:description" content="مدیریت هوشمند و قدرتمند گروه‌های روبیکا">
-  <meta property="og:type" content="website">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
   <style>
     * { font-family: 'Vazirmatn', 'Tahoma', system-ui, sans-serif; }
     body { transition: all 0.3s ease; }
+    
+    /* انیمیشن گرادیانت پس زمینه */
     .hero-bg {
       background: linear-gradient(135deg, #0f172a, #1e2937);
       background-size: 400% 400%;
@@ -26,39 +27,111 @@
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
+    
+    /* انیمیشن شناور برای کارت‌ها */
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+    .float-animation {
+      animation: float 4s ease-in-out infinite;
+    }
+    
+    /* انیمیشن ضربان دار برای دکمه‌ها */
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(34,197,94,0.4); }
+      70% { transform: scale(1.02); box-shadow: 0 0 0 15px rgba(34,197,94,0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+    }
+    .pulse-animation {
+      animation: pulse 2s infinite;
+    }
+    
+    /* انیمیشن اسلاید از پایین */
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .slide-up {
+      animation: slideUp 0.6s ease-out forwards;
+    }
+    
+    /* انیمیشن ظاهر شدن با افکت */
+    @keyframes fadeInScale {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .fade-scale {
+      animation: fadeInScale 0.5s ease-out forwards;
+    }
+    
+    /* انیمیشن چرخش آیکون */
+    @keyframes iconSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .icon-spin:hover i {
+      animation: iconSpin 0.6s ease-in-out;
+    }
+    
+    /* انیمیشن 3D Flip برای کارت قابلیت‌ها */
+    .transform-style-3d {
+      transform-style: preserve-3d;
+    }
+    .backface-hidden {
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    .rotateY-180 {
+      transform: rotateY(180deg);
+    }
+    .feature-card {
+      perspective: 1000px;
+    }
+    .feature-card .card-inner {
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+    }
+    .feature-card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+    .feature-card:hover .card-front:not(.flipped) {
+      border-color: #22c55e;
+      box-shadow: 0 0 20px rgba(34,197,94,0.3);
+      transform: scale(1.02);
+    }
+    
+    /* انیمیشن خط زیر منو */
+    .nav-btn {
+      position: relative;
+      overflow: hidden;
+    }
+    .nav-btn::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 0;
+      height: 2px;
+      background: #22c55e;
+      transition: width 0.3s ease;
+    }
+    .nav-btn:hover::after {
+      width: 100%;
+      left: 0;
+      right: auto;
+    }
+    .nav-btn.active::after {
+      width: 100%;
+    }
+    
     .neon-text { text-shadow: 0 0 20px currentColor, 0 0 40px currentColor; }
     .card-hover { transition: all 0.4s ease; }
     .card-hover:hover { transform: translateY(-12px); box-shadow: 0 20px 25px -5px rgba(34, 197, 94, 0.3); }
     .counter { font-size: 3.8rem; font-weight: bold; }
     .page { display: none; }
-    .page.active { display: block; animation: fadeIn 0.3s ease; }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .nav-btn { transition: all 0.3s ease; cursor: pointer; }
-    .nav-btn.active { background: currentColor; color: white; }
-    
-    /* انیمیشن برای کارت قابلیت‌ها */
-    .feature-card {
-      transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-      cursor: pointer;
-      transform-style: preserve-3d;
-      min-height: 160px;
-    }
-    .feature-card.flipped {
-      transform: rotateY(180deg);
-    }
-    .feature-card .front, .feature-card .back {
-      backface-visibility: hidden;
-      transition: all 0.5s ease;
-    }
-    .feature-card .back {
-      transform: rotateY(180deg);
-      display: none;
-    }
-    .feature-card.flipped .front { display: none; }
-    .feature-card.flipped .back { display: flex; }
+    .page.active { display: block; animation: fadeInScale 0.5s ease-out; }
     
     .admin-btn {
       position: fixed;
@@ -77,8 +150,9 @@
       transition: 0.3s;
       font-size: 24px;
       color: white;
+      animation: pulse 2s infinite;
     }
-    .admin-btn:hover { transform: scale(1.1); box-shadow: 0 0 25px rgba(34,197,94,0.8); }
+    .admin-btn:hover { transform: scale(1.1) rotate(90deg); box-shadow: 0 0 25px rgba(34,197,94,0.8); }
     
     .admin-modal {
       display: none;
@@ -92,7 +166,7 @@
       justify-content: center;
       align-items: center;
     }
-    .admin-modal.active { display: flex; }
+    .admin-modal.active { display: flex; animation: fadeInScale 0.3s ease-out; }
     .admin-box {
       background: #1e2937;
       border-radius: 32px;
@@ -123,6 +197,7 @@
       transition: 0.3s;
       border: 1px solid rgba(255,255,255,0.2);
     }
+    .settings-toggle:hover { transform: scale(1.1) rotate(15deg); }
     .settings-menu {
       position: absolute;
       bottom: 60px;
@@ -134,8 +209,9 @@
       padding: 20px;
       display: none;
       border: 1px solid rgba(255,255,255,0.1);
+      animation: slideUp 0.3s ease-out;
     }
-    .settings-menu.active { display: block; animation: fadeIn 0.2s ease; }
+    .settings-menu.active { display: block; }
     .toggle-switch {
       width: 50px;
       height: 24px;
@@ -158,65 +234,72 @@
       transition: 0.3s;
     }
     .toggle-switch.active::after { right: 26px; }
-    .ad-card { transition: all 0.3s ease; }
-    .ad-card:hover { transform: translateY(-5px); }
+    .ad-card { transition: all 0.3s ease; animation: slideUp 0.5s ease-out; }
+    .ad-card:hover { transform: translateY(-5px) scale(1.02); }
     .poll-option { transition: all 0.2s ease; cursor: pointer; }
-    .poll-option:hover { transform: scale(1.02); background: rgba(34,197,94,0.1); }
+    .poll-option:hover { transform: scale(1.02) translateX(-5px); background: rgba(34,197,94,0.1); }
     .poll-option.disabled { opacity: 0.5; cursor: not-allowed; }
     .poll-option.disabled:hover { transform: none; background: none; }
-    .ad-preview-img { width: 50px; height: 50px; object-fit: cover; border-radius: 12px; }
     .bg-preview-box { width: 100%; height: 80px; border-radius: 16px; margin-top: 10px; background-size: cover; background-position: center; }
+    
+    /* انیمیشن برای لینکدونی */
+    .linkdonation-card {
+      animation: slideUp 0.6s ease-out;
+    }
+    .linkdonation-card:hover {
+      transform: translateY(-8px);
+      transition: transform 0.3s ease;
+    }
+    
+    /* انیمیشن برای ارتباط با ما */
+    .contact-card {
+      animation: fadeInScale 0.5s ease-out;
+    }
   </style>
 </head>
 <body id="mainBody" class="bg-zinc-950 text-white min-h-screen">
 
- 
-  <div class="admin-btn" id="adminBtn">
-    <i class="fas fa-cog"></i>
-  </div>
-
+  <div class="admin-btn pulse-animation" id="adminBtn"><i class="fas fa-cog"></i></div>
 
   <div id="adminModal" class="admin-modal">
     <div class="admin-box">
       <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold text-green-400">🛠️ پنل مدیریت</h2>
-        <button id="closeAdminModal" class="text-white text-3xl hover:text-green-400">&times;</button>
+        <button id="closeAdminModal" class="text-white text-3xl hover:text-green-400 transition-all hover:rotate-90">&times;</button>
       </div>
       <div id="adminPasswordSection">
         <p class="text-center mb-4">رمز مدیریت را وارد کنید</p>
-        <input type="password" id="adminPassword" placeholder="رمز" class="w-full bg-zinc-800 border border-zinc-700 rounded-xl p-3 mb-4 text-white">
-        <button id="checkPasswordBtn" class="w-full bg-green-600 hover:bg-green-500 rounded-xl p-3 font-bold">ورود</button>
+        <input type="password" id="adminPassword" placeholder="رمز" class="w-full bg-zinc-800 border border-zinc-700 rounded-xl p-3 mb-4 text-white focus:border-green-500 transition-all">
+        <button id="checkPasswordBtn" class="w-full bg-green-600 hover:bg-green-500 rounded-xl p-3 font-bold transition-all hover:scale-105">ورود</button>
       </div>
       <div id="adminPanelContent" style="display: none;">
         <div class="space-y-5">
           <div>
             <label class="block text-sm mb-2">🎨 رنگ اصلی سایت</label>
-            <input type="color" id="siteColor" value="#22c55e" class="w-full h-12 rounded-xl cursor-pointer">
+            <input type="color" id="siteColor" value="#22c55e" class="w-full h-12 rounded-xl cursor-pointer transition-all hover:scale-105">
           </div>
           
-          <!-- تنظیمات پس زمینه -->
           <div class="border-t border-zinc-700 pt-3">
             <h3 class="font-bold text-green-400 mb-3">🖼️ تنظیمات پس زمینه سایت</h3>
             <div class="space-y-3">
-              <select id="bgTypeSelect" class="w-full bg-zinc-800 border border-zinc-700 rounded-xl p-2">
+              <select id="bgTypeSelect" class="w-full bg-zinc-800 border border-zinc-700 rounded-xl p-2 transition-all focus:border-green-500">
                 <option value="gradient">گرادیانت پیش‌فرض</option>
                 <option value="dark">تیره ساده</option>
                 <option value="light">روشن ساده</option>
                 <option value="custom">عکس دلخواه</option>
               </select>
               <div id="customBgSection" style="display: none;">
-                <button id="uploadBgBtn" class="w-full bg-blue-600 hover:bg-blue-500 rounded-xl p-2 text-sm">📁 آپلود عکس پس زمینه</button>
+                <button id="uploadBgBtn" class="w-full bg-blue-600 hover:bg-blue-500 rounded-xl p-2 text-sm transition-all hover:scale-105">📁 آپلود عکس پس زمینه (حداکثر 500KB)</button>
                 <div id="bgPreview" class="bg-preview-box mt-2" style="display: none;"></div>
-                <button id="removeBgBtn" class="w-full bg-red-600/50 hover:bg-red-600 rounded-xl p-2 text-sm mt-2" style="display: none;">🗑️ حذف عکس پس زمینه</button>
+                <button id="removeBgBtn" class="w-full bg-red-600/50 hover:bg-red-600 rounded-xl p-2 text-sm mt-2 transition-all">🗑️ حذف عکس پس زمینه</button>
               </div>
             </div>
           </div>
           
-          <!-- تبلیغات با قابلیت آپلود عکس و فیلم -->
           <div class="border-t border-zinc-700 pt-3">
             <h3 class="font-bold text-green-400 mb-3">📢 مدیریت تبلیغات</h3>
             <div id="adsManagerList" class="space-y-4 mb-4"></div>
-            <button id="addNewAdBtn" class="w-full bg-blue-600 hover:bg-blue-500 rounded-xl p-2 text-sm">➕ افزودن تبلیغ جدید</button>
+            <button id="addNewAdBtn" class="w-full bg-blue-600 hover:bg-blue-500 rounded-xl p-2 text-sm transition-all hover:scale-105">➕ افزودن تبلیغ جدید</button>
           </div>
           
           <div class="border-t border-zinc-700 pt-3">
@@ -224,25 +307,23 @@
             <div id="botLocksPanel" class="space-y-2"></div>
           </div>
           
-          <button id="saveAdminSettings" class="w-full bg-green-600 hover:bg-green-500 rounded-xl p-3 font-bold mt-4">💾 ذخیره تنظیمات</button>
+          <button id="saveAdminSettings" class="w-full bg-green-600 hover:bg-green-500 rounded-xl p-3 font-bold mt-4 transition-all hover:scale-105 pulse-animation">💾 ذخیره تنظیمات</button>
           <div id="saveStatus" class="text-center text-sm mt-2"></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- پنل تنظیمات کاربر -->
   <div class="settings-panel">
     <div class="settings-toggle" id="settingsToggle"><i class="fas fa-palette text-green-400 text-xl"></i></div>
     <div class="settings-menu" id="settingsMenu">
       <h3 class="text-center font-bold mb-4 text-green-400">🎨 تنظیمات نمایش</h3>
-      <div class="mb-3"><label class="text-sm block mb-1">رنگ اصلی</label><input type="color" id="userColorPicker" value="#22c55e" class="w-full h-10 rounded-xl cursor-pointer bg-transparent border border-zinc-700"></div>
-      <div class="mb-3"><label class="text-sm block mb-1">سایز فونت</label><div class="flex gap-2"><button id="fontSmall" class="flex-1 py-2 rounded-xl text-sm bg-zinc-800">کوچک</button><button id="fontMedium" class="flex-1 py-2 rounded-xl text-sm bg-green-600">متوسط</button><button id="fontLarge" class="flex-1 py-2 rounded-xl text-sm bg-zinc-800">بزرگ</button></div></div>
-      <button id="resetUserSettings" class="w-full mt-2 py-2 rounded-xl text-sm bg-red-600/50 hover:bg-red-600">🔄 بازنشانی</button>
+      <div class="mb-3"><label class="text-sm block mb-1">رنگ اصلی</label><input type="color" id="userColorPicker" value="#22c55e" class="w-full h-10 rounded-xl cursor-pointer bg-transparent border border-zinc-700 transition-all"></div>
+      <div class="mb-3"><label class="text-sm block mb-1">سایز فونت</label><div class="flex gap-2"><button id="fontSmall" class="flex-1 py-2 rounded-xl text-sm bg-zinc-800 hover:bg-zinc-700 transition-all">کوچک</button><button id="fontMedium" class="flex-1 py-2 rounded-xl text-sm bg-green-600">متوسط</button><button id="fontLarge" class="flex-1 py-2 rounded-xl text-sm bg-zinc-800 hover:bg-zinc-700 transition-all">بزرگ</button></div></div>
+      <button id="resetUserSettings" class="w-full mt-2 py-2 rounded-xl text-sm bg-red-600/50 hover:bg-red-600 transition-all">🔄 بازنشانی</button>
     </div>
   </div>
 
-  <!-- منوی ناوبری -->
   <div class="sticky top-0 z-50 bg-black/80 backdrop-blur-lg border-b border-white/10">
     <div class="max-w-6xl mx-auto px-4 py-3">
       <div class="flex justify-around gap-2 flex-wrap">
@@ -255,12 +336,12 @@
     </div>
   </div>
 
-  <!-- صفحه 1: خانه -->
+  <!-- صفحه خانه -->
   <div id="homePage" class="page active">
     <section class="min-h-screen flex items-center justify-center relative overflow-hidden">
       <div class="absolute inset-0 bg-[radial-gradient(at_center,#22c55e_0%,transparent_70%)] opacity-10"></div>
-      <div class="max-w-5xl mx-auto text-center px-6 relative z-10">
-        <div id="logoContainer" class="w-60 h-60 mx-auto mb-8 rounded-3xl border-4 border-green-500/30 bg-zinc-900/80 overflow-hidden shadow-2xl cursor-pointer transition-all">
+      <div class="max-w-5xl mx-auto text-center px-6 relative z-10 fade-scale">
+        <div id="logoContainer" class="w-60 h-60 mx-auto mb-8 rounded-3xl border-4 border-green-500/30 bg-zinc-900/80 overflow-hidden shadow-2xl cursor-pointer transition-all hover:scale-105 hover:rotate-3">
           <img id="mainLogo" src="IMG_20260504_160002_753.jpg" class="w-full h-full object-contain p-6">
         </div>
         <p class="text-green-400 text-sm mb-4">به من میگن بتمنی</p>
@@ -268,19 +349,19 @@
         <p class="text-2xl text-green-400 mb-4">BatmanRH ✓</p>
         <p class="text-lg text-zinc-400 mb-12">مدیریت هوشمند و قدرتمند گروه‌های روبیکا</p>
         <div class="flex flex-col sm:flex-row gap-5 justify-center">
-          <a href="https://rubika.ir/@botbatmanrh" target="_blank" id="primaryBtn" class="px-8 py-4 rounded-2xl text-xl font-bold flex items-center justify-center gap-3 transition-all hover:scale-105"><i class="fas fa-robot"></i> ورود به ربات</a>
-          <a href="https://rubika.ir/@link_bog" target="_blank" class="border border-white/60 px-8 py-4 rounded-2xl text-xl font-bold flex items-center justify-center gap-3 transition-all hover:bg-white/10"><i class="fas fa-paper-plane"></i> لینکدونی بتمن</a>
+          <a href="https://rubika.ir/@botbatmanrh" target="_blank" id="primaryBtn" class="px-8 py-4 rounded-2xl text-xl font-bold flex items-center justify-center gap-3 transition-all hover:scale-105 pulse-animation"><i class="fas fa-robot"></i> ورود به ربات</a>
+          <a href="https://rubika.ir/@link_bog" target="_blank" class="border border-white/60 px-8 py-4 rounded-2xl text-xl font-bold flex items-center justify-center gap-3 transition-all hover:scale-105 hover:bg-white/10"><i class="fas fa-paper-plane"></i> لینکدونی بتمن</a>
         </div>
       </div>
     </section>
 
     <section class="py-24 bg-black/70">
       <div class="max-w-4xl mx-auto px-6">
-        <h2 class="text-4xl font-bold text-center mb-12 text-green-400">📖 معرفی ربات مدیریت گروه بتمن</h2>
-        <div class="bg-zinc-900/80 border border-white/10 rounded-3xl p-8 text-lg leading-relaxed card-hover">
+        <h2 class="text-4xl font-bold text-center mb-12 text-green-400 slide-up">📖 معرفی ربات مدیریت گروه بتمن</h2>
+        <div class="bg-zinc-900/80 border border-white/10 rounded-3xl p-8 text-lg leading-relaxed card-hover float-animation">
           <p class="text-zinc-300">
             معرفی ربات مدیریت گروه بتمن ✓<br><br>
-            ربات بتمن یک دستیار هوشمند، قدرتمند و پایدار برای مدیریت یکپارچه‌ی گروه‌های روبیکایی شماست. این ربات با ارائه مجموعه‌ای کامل از ابزارهای کنترلی، به شما کمک می‌کند تا نظم و امنیت را به سادگی در گروه خود برقرار کنید.<br><br>
+            ربات بتمن یک دستیار هوشمند، قدرتمند و پایدار برای مدیریت یکپارچه‌ی گروه‌های روبیکایی شماست.<br><br>
             <strong>ویژگی‌های کلیدی ربات:</strong><br>
             • کنترل هوشمند محتوا: قفل کردن انواع پیام‌های مزاحم مانند لینک، تبلیغات، فحاشی، اسپم، فایل و مدیا.<br>
             • سیستم اخطار و مجازات خودکار: قابلیت تنظیم سقف اخطار برای تخلفات و اعمال خودکار محدودیت‌هایی مانند سکوت یا اخراج.<br>
@@ -295,116 +376,129 @@
     </section>
   </div>
 
-  <!-- صفحه 2: قابلیت‌ها (با انیمیشن flip) -->
+  <!-- صفحه قابلیت‌ها با 3D Flip -->
   <div id="featuresPage" class="page">
     <section class="py-20">
       <div class="max-w-5xl mx-auto px-6">
-        <h2 class="text-4xl font-bold text-center mb-12 text-green-400">⚡ قابلیت‌های ربات بتمن</h2>
+        <h2 class="text-4xl font-bold text-center mb-12 text-green-400 slide-up">⚡ قابلیت‌های ربات بتمن</h2>
         <div class="grid grid-cols-2 md:grid-cols-3 gap-5">
-          <div class="feature-card bg-zinc-900 p-5 rounded-2xl border border-white/10 text-center relative" style="min-height: 180px;">
-            <div class="front flex flex-col items-center">
-              <div class="text-4xl mb-3">🛡️</div>
-              <h3 class="font-bold">مدیریت کاربران</h3>
-              <p class="text-zinc-400 text-sm">اخراج، سکوت، بن</p>
-            </div>
-            <div class="back hidden flex-col items-center justify-center absolute inset-0 bg-zinc-800 rounded-2xl p-4">
-              <p class="text-sm text-zinc-300 text-center">امکانات: اخراج کاربر، سکوت زمان‌دار، بن دائمی، ارتقا به ادمین، معافیت از قوانین</p>
-            </div>
-          </div>
-          <div class="feature-card bg-zinc-900 p-5 rounded-2xl border border-white/10 text-center relative" style="min-height: 180px;">
-            <div class="front flex flex-col items-center">
-              <div class="text-4xl mb-3">📛</div>
-              <h3 class="font-bold">آنتی اسپم</h3>
-              <p class="text-zinc-400 text-sm">حذف خودکار تبلیغات</p>
-            </div>
-            <div class="back hidden flex-col items-center justify-center absolute inset-0 bg-zinc-800 rounded-2xl p-4">
-              <p class="text-sm text-zinc-300 text-center">تشخیص و حذف خودکار پیام‌های تبلیغاتی، لینک‌های تکراری و هرزنامه</p>
+          
+          <div class="feature-card relative" style="min-height: 220px;">
+            <div class="card-inner relative w-full h-full transition-all duration-700 transform-style-3d cursor-pointer rounded-2xl">
+              <div class="card-front absolute w-full h-full backface-hidden bg-zinc-900 rounded-2xl border border-white/10 p-5 flex flex-col items-center justify-center text-center">
+                <div class="text-5xl mb-3">🛡️</div>
+                <h3 class="font-bold text-lg mb-2">مدیریت کاربران</h3>
+                <p class="text-zinc-400 text-sm">اخراج، سکوت، بن</p>
+                <div class="mt-3 text-xs text-green-400">✨ برای توضیحات کلیک کن</div>
+              </div>
+              <div class="card-back absolute w-full h-full backface-hidden bg-gradient-to-br from-green-900/80 to-zinc-900 rounded-2xl border border-green-500/30 p-5 flex flex-col items-center justify-center text-center rotateY-180">
+                <i class="fas fa-users text-3xl text-green-400 mb-3"></i>
+                <p class="text-sm text-zinc-200 leading-relaxed">✅ اخراج کاربر<br>✅ سکوت زمان‌دار<br>✅ بن دائمی<br>✅ ارتقا به ادمین<br>✅ معافیت از قوانین</p>
+                <div class="mt-3 text-xs text-green-400">🔁 کلیک کن تا برگردی</div>
+              </div>
             </div>
           </div>
-          <div class="feature-card bg-zinc-900 p-5 rounded-2xl border border-white/10 text-center relative" style="min-height: 180px;">
-            <div class="front flex flex-col items-center">
-              <div class="text-4xl mb-3">🔍</div>
-              <h3 class="font-bold">فیلتر پیشرفته</h3>
-              <p class="text-zinc-400 text-sm">کلمات، لینک، فلود</p>
-            </div>
-            <div class="back hidden flex-col items-center justify-center absolute inset-0 bg-zinc-800 rounded-2xl p-4">
-              <p class="text-sm text-zinc-300 text-center">فیلتر کلمات نامناسب، جلوگیری از ارسال لینک، کنترل تعداد پیام‌های پشت سر هم</p>
-            </div>
-          </div>
-          <div class="feature-card bg-zinc-900 p-5 rounded-2xl border border-white/10 text-center relative" style="min-height: 180px;">
-            <div class="front flex flex-col items-center">
-              <div class="text-4xl mb-3">💬</div>
-              <h3 class="font-bold">ربات سخنگو</h3>
-              <p class="text-zinc-400 text-sm">چت هوشمند</p>
-            </div>
-            <div class="back hidden flex-col items-center justify-center absolute inset-0 bg-zinc-800 rounded-2xl p-4">
-              <p class="text-sm text-zinc-300 text-center">پاسخگویی خودکار به سوالات، قابلیت یادگیری شخصی و عمومی، مکالمه هوشمند</p>
+          
+          <div class="feature-card relative" style="min-height: 220px;">
+            <div class="card-inner relative w-full h-full transition-all duration-700 transform-style-3d cursor-pointer rounded-2xl">
+              <div class="card-front absolute w-full h-full backface-hidden bg-zinc-900 rounded-2xl border border-white/10 p-5 flex flex-col items-center justify-center text-center">
+                <div class="text-5xl mb-3">📛</div>
+                <h3 class="font-bold text-lg mb-2">آنتی اسپم</h3>
+                <p class="text-zinc-400 text-sm">حذف خودکار تبلیغات</p>
+                <div class="mt-3 text-xs text-green-400">✨ برای توضیحات کلیک کن</div>
+              </div>
+              <div class="card-back absolute w-full h-full backface-hidden bg-gradient-to-br from-green-900/80 to-zinc-900 rounded-2xl border border-green-500/30 p-5 flex flex-col items-center justify-center text-center rotateY-180">
+                <i class="fas fa-ban text-3xl text-green-400 mb-3"></i>
+                <p class="text-sm text-zinc-200 leading-relaxed">✅ تشخیص تبلیغات<br>✅ حذف خودکار پیام<br>✅ جلوگیری از لینک‌های تکراری<br>✅ مسدودسازی هرزنامه</p>
+                <div class="mt-3 text-xs text-green-400">🔁 کلیک کن تا برگردی</div>
+              </div>
             </div>
           </div>
-          <div class="feature-card bg-zinc-900 p-5 rounded-2xl border border-white/10 text-center relative" style="min-height: 180px;">
-            <div class="front flex flex-col items-center">
-              <div class="text-4xl mb-3">📊</div>
-              <h3 class="font-bold">داشبورد</h3>
-              <p class="text-zinc-400 text-sm">کنترل سریع</p>
-            </div>
-            <div class="back hidden flex-col items-center justify-center absolute inset-0 bg-zinc-800 rounded-2xl p-4">
-              <p class="text-sm text-zinc-300 text-center">مشاهده و کنترل وضعیت قفل‌ها، آمار گروه، تنظیمات ربات از یک پنل حرفه‌ای</p>
-            </div>
-          </div>
-          <div class="feature-card bg-zinc-900 p-5 rounded-2xl border border-white/10 text-center relative" style="min-height: 180px;">
-            <div class="front flex flex-col items-center">
-              <div class="text-4xl mb-3">⚡</div>
-              <h3 class="font-bold">رایگان و پایدار</h3>
-              <p class="text-zinc-400 text-sm">بدون محدودیت</p>
-            </div>
-            <div class="back hidden flex-col items-center justify-center absolute inset-0 bg-zinc-800 rounded-2xl p-4">
-              <p class="text-sm text-zinc-300 text-center">همیشه رایگان، بدون محدودیت تعداد کاربران، آپدیت‌های مداوم و پشتیبانی ۲۴ ساعته</p>
+          
+          <div class="feature-card relative" style="min-height: 220px;">
+            <div class="card-inner relative w-full h-full transition-all duration-700 transform-style-3d cursor-pointer rounded-2xl">
+              <div class="card-front absolute w-full h-full backface-hidden bg-zinc-900 rounded-2xl border border-white/10 p-5 flex flex-col items-center justify-center text-center">
+                <div class="text-5xl mb-3">🔍</div>
+                <h3 class="font-bold text-lg mb-2">فیلتر پیشرفته</h3>
+                <p class="text-zinc-400 text-sm">کلمات، لینک، فلود</p>
+                <div class="mt-3 text-xs text-green-400">✨ برای توضیحات کلیک کن</div>
+              </div>
+              <div class="card-back absolute w-full h-full backface-hidden bg-gradient-to-br from-green-900/80 to-zinc-900 rounded-2xl border border-green-500/30 p-5 flex flex-col items-center justify-center text-center rotateY-180">
+                <i class="fas fa-filter text-3xl text-green-400 mb-3"></i>
+                <p class="text-sm text-zinc-200 leading-relaxed">✅ فیلتر کلمات نامناسب<br>✅ جلوگیری از لینک<br>✅ کنترل پیام‌های پشت سر هم<br>✅ مسدودسازی فلود</p>
+                <div class="mt-3 text-xs text-green-400">🔁 کلیک کن تا برگردی</div>
+              </div>
             </div>
           </div>
+          
+          <div class="feature-card relative" style="min-height: 220px;">
+            <div class="card-inner relative w-full h-full transition-all duration-700 transform-style-3d cursor-pointer rounded-2xl">
+              <div class="card-front absolute w-full h-full backface-hidden bg-zinc-900 rounded-2xl border border-white/10 p-5 flex flex-col items-center justify-center text-center">
+                <div class="text-5xl mb-3">💬</div>
+                <h3 class="font-bold text-lg mb-2">ربات سخنگو</h3>
+                <p class="text-zinc-400 text-sm">چت هوشمند</p>
+                <div class="mt-3 text-xs text-green-400">✨ برای توضیحات کلیک کن</div>
+              </div>
+              <div class="card-back absolute w-full h-full backface-hidden bg-gradient-to-br from-green-900/80 to-zinc-900 rounded-2xl border border-green-500/30 p-5 flex flex-col items-center justify-center text-center rotateY-180">
+                <i class="fas fa-comments text-3xl text-green-400 mb-3"></i>
+                <p class="text-sm text-zinc-200 leading-relaxed">✅ پاسخگویی خودکار<br>✅ قابلیت یادگیری شخصی<br>✅ قابلیت یادگیری عمومی<br>✅ مکالمه هوشمند</p>
+                <div class="mt-3 text-xs text-green-400">🔁 کلیک کن تا برگردی</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="feature-card relative" style="min-height: 220px;">
+            <div class="card-inner relative w-full h-full transition-all duration-700 transform-style-3d cursor-pointer rounded-2xl">
+              <div class="card-front absolute w-full h-full backface-hidden bg-zinc-900 rounded-2xl border border-white/10 p-5 flex flex-col items-center justify-center text-center">
+                <div class="text-5xl mb-3">📊</div>
+                <h3 class="font-bold text-lg mb-2">داشبورد حرفه‌ای</h3>
+                <p class="text-zinc-400 text-sm">کنترل سریع</p>
+                <div class="mt-3 text-xs text-green-400">✨ برای توضیحات کلیک کن</div>
+              </div>
+              <div class="card-back absolute w-full h-full backface-hidden bg-gradient-to-br from-green-900/80 to-zinc-900 rounded-2xl border border-green-500/30 p-5 flex flex-col items-center justify-center text-center rotateY-180">
+                <i class="fas fa-chart-line text-3xl text-green-400 mb-3"></i>
+                <p class="text-sm text-zinc-200 leading-relaxed">✅ مشاهده وضعیت قفل‌ها<br>✅ آمار گروه<br>✅ تنظیمات ربات<br>✅ کنترل لحظه‌ای</p>
+                <div class="mt-3 text-xs text-green-400">🔁 کلیک کن تا برگردی</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="feature-card relative" style="min-height: 220px;">
+            <div class="card-inner relative w-full h-full transition-all duration-700 transform-style-3d cursor-pointer rounded-2xl">
+              <div class="card-front absolute w-full h-full backface-hidden bg-zinc-900 rounded-2xl border border-white/10 p-5 flex flex-col items-center justify-center text-center">
+                <div class="text-5xl mb-3">⚡</div>
+                <h3 class="font-bold text-lg mb-2">رایگان و پایدار</h3>
+                <p class="text-zinc-400 text-sm">بدون محدودیت</p>
+                <div class="mt-3 text-xs text-green-400">✨ برای توضیحات کلیک کن</div>
+              </div>
+              <div class="card-back absolute w-full h-full backface-hidden bg-gradient-to-br from-green-900/80 to-zinc-900 rounded-2xl border border-green-500/30 p-5 flex flex-col items-center justify-center text-center rotateY-180">
+                <i class="fas fa-infinity text-3xl text-green-400 mb-3"></i>
+                <p class="text-sm text-zinc-200 leading-relaxed">✅ همیشه رایگان<br>✅ بدون محدودیت کاربر<br>✅ آپدیت مداوم<br>✅ پشتیبانی ۲۴ ساعته</p>
+                <div class="mt-3 text-xs text-green-400">🔁 کلیک کن تا برگردی</div>
+              </div>
+            </div>
+          </div>
+          
         </div>
       </div>
     </section>
   </div>
 
-  <!-- صفحه 3: نظرسنجی -->
+  <!-- صفحه نظرسنجی -->
   <div id="surveyPage" class="page">
     <section class="py-20">
       <div class="max-w-4xl mx-auto px-6">
-        <div class="text-center mb-10 bg-black/50 rounded-3xl p-8">
-          <div class="flex items-center justify-center gap-3 mb-2">
-            <i class="fas fa-circle text-green-500 text-xs animate-pulse"></i>
-            <p class="text-zinc-400 text-lg">👥 کاربران آنلاین</p>
-          </div>
-          <div class="flex items-baseline justify-center gap-4">
-            <span class="counter text-green-500" id="onlineCount">156</span>
-            <span class="text-2xl text-green-400">نفر</span>
-          </div>
-          <p class="text-zinc-500 text-sm mt-3">آپدیت لحظه‌ای</p>
+        <div class="text-center mb-10 bg-black/50 rounded-3xl p-8 fade-scale">
+          <div class="flex items-center justify-center gap-3 mb-2"><i class="fas fa-circle text-green-500 text-xs animate-pulse"></i><p class="text-zinc-400 text-lg">👥 کاربران آنلاین</p></div>
+          <div class="flex items-baseline justify-center gap-4"><span class="counter text-green-500" id="onlineCount">156</span><span class="text-2xl text-green-400">نفر</span></div>
         </div>
-
-        <div class="bg-zinc-900/80 border border-white/10 rounded-3xl p-8">
-          <div class="text-center mb-8">
-            <i class="fas fa-chart-simple text-5xl text-green-400 mb-3"></i>
-            <h2 class="text-3xl font-bold text-green-400">📊 نظر سنجی</h2>
-            <p class="text-zinc-400 mt-2">کیفیت ربات بتمن را چگونه ارزیابی می‌کنید؟</p>
-            <p class="text-xs text-zinc-500 mt-1" id="pollUserStatus">✨ هر کاربر فقط یک بار می‌تواند نظر دهد</p>
-          </div>
-          
+        <div class="bg-zinc-900/80 border border-white/10 rounded-3xl p-8 slide-up">
+          <div class="text-center mb-8"><i class="fas fa-chart-simple text-5xl text-green-400 mb-3"></i><h2 class="text-3xl font-bold text-green-400">📊 نظر سنجی</h2><p class="text-xs text-zinc-500 mt-1" id="pollUserStatus">✨ هر کاربر فقط یک بار می‌تواند نظر دهد</p></div>
           <div id="pollContainer" class="space-y-4">
-            <div class="poll-option bg-zinc-800/50 border border-zinc-700 rounded-2xl p-4 flex justify-between items-center hover:border-green-500 transition-all" data-poll-value="عالی">
-              <div class="flex items-center gap-3"><span class="text-3xl">⭐</span><span class="text-lg font-bold">عالی</span></div>
-              <div class="flex items-center gap-3"><div class="w-32 bg-zinc-700 rounded-full h-2 overflow-hidden"><div id="pollBar1" class="h-full bg-green-500 rounded-full" style="width: 0%"></div></div><span id="pollPercent1" class="font-bold text-green-400 text-lg w-12">0%</span></div>
-            </div>
-            <div class="poll-option bg-zinc-800/50 border border-zinc-700 rounded-2xl p-4 flex justify-between items-center hover:border-green-500 transition-all" data-poll-value="خوب">
-              <div class="flex items-center gap-3"><span class="text-3xl">👍</span><span class="text-lg font-bold">خوب</span></div>
-              <div class="flex items-center gap-3"><div class="w-32 bg-zinc-700 rounded-full h-2 overflow-hidden"><div id="pollBar2" class="h-full bg-green-500 rounded-full" style="width: 0%"></div></div><span id="pollPercent2" class="font-bold text-green-400 text-lg w-12">0%</span></div>
-            </div>
-            <div class="poll-option bg-zinc-800/50 border border-zinc-700 rounded-2xl p-4 flex justify-between items-center hover:border-green-500 transition-all" data-poll-value="نیاز به بهبود">
-              <div class="flex items-center gap-3"><span class="text-3xl">🔄</span><span class="text-lg font-bold">نیاز به بهبود</span></div>
-              <div class="flex items-center gap-3"><div class="w-32 bg-zinc-700 rounded-full h-2 overflow-hidden"><div id="pollBar3" class="h-full bg-green-500 rounded-full" style="width: 0%"></div></div><span id="pollPercent3" class="font-bold text-green-400 text-lg w-12">0%</span></div>
-            </div>
+            <div class="poll-option bg-zinc-800/50 border border-zinc-700 rounded-2xl p-4 flex justify-between items-center" data-poll-value="عالی"><div class="flex items-center gap-3"><span class="text-3xl">⭐</span><span class="text-lg font-bold">عالی</span></div><div class="flex items-center gap-3"><div class="w-32 bg-zinc-700 rounded-full h-2 overflow-hidden"><div id="pollBar1" class="h-full bg-green-500 rounded-full"></div></div><span id="pollPercent1" class="font-bold text-green-400 text-lg w-12">0%</span></div></div>
+            <div class="poll-option bg-zinc-800/50 border border-zinc-700 rounded-2xl p-4 flex justify-between items-center" data-poll-value="خوب"><div class="flex items-center gap-3"><span class="text-3xl">👍</span><span class="text-lg font-bold">خوب</span></div><div class="flex items-center gap-3"><div class="w-32 bg-zinc-700 rounded-full h-2 overflow-hidden"><div id="pollBar2" class="h-full bg-green-500 rounded-full"></div></div><span id="pollPercent2" class="font-bold text-green-400 text-lg w-12">0%</span></div></div>
+            <div class="poll-option bg-zinc-800/50 border border-zinc-700 rounded-2xl p-4 flex justify-between items-center" data-poll-value="نیاز به بهبود"><div class="flex items-center gap-3"><span class="text-3xl">🔄</span><span class="text-lg font-bold">نیاز به بهبود</span></div><div class="flex items-center gap-3"><div class="w-32 bg-zinc-700 rounded-full h-2 overflow-hidden"><div id="pollBar3" class="h-full bg-green-500 rounded-full"></div></div><span id="pollPercent3" class="font-bold text-green-400 text-lg w-12">0%</span></div></div>
           </div>
-          
           <div id="pollMessage" class="text-center text-zinc-500 mt-6 text-sm"></div>
           <div id="totalVotesDisplay" class="text-center text-zinc-600 text-xs mt-2"></div>
         </div>
@@ -412,28 +506,19 @@
     </section>
   </div>
 
-  <!-- صفحه 4: لینکدونی -->
+  <!-- صفحه لینکدونی -->
   <div id="linkdonationPage" class="page">
     <section class="py-20 min-h-[60vh] flex items-center justify-center">
-      <div class="max-w-3xl mx-auto px-6 w-full text-center">
-        <div class="bg-zinc-900/80 border border-white/10 rounded-3xl p-12">
-          <div class="text-center mb-8">
-            <i class="fas fa-link text-6xl text-green-400 mb-4"></i>
-            <h2 class="text-4xl font-bold text-green-400">لینکدونی پر بازدید بتمن</h2>
-            <p class="text-zinc-400 mt-3">محلی برای معرفی و دیده شدن گروه شما</p>
-          </div>
-          
-          <div class="bg-gradient-to-r from-green-900/30 to-emerald-900/30 border border-green-500/30 rounded-2xl p-8">
+      <div class="max-w-3xl mx-auto px-6 w-full text-center linkdonation-card">
+        <div class="bg-zinc-900/80 border border-white/10 rounded-3xl p-12 transition-all hover:transform hover:scale-105 duration-500">
+          <i class="fas fa-link text-6xl text-green-400 mb-4 icon-spin"></i>
+          <h2 class="text-4xl font-bold text-green-400">لینکدونی پر بازدید بتمن</h2>
+          <p class="text-zinc-400 mt-3">محلی برای معرفی و دیده شدن گروه شما</p>
+          <div class="bg-gradient-to-r from-green-900/30 to-emerald-900/30 border border-green-500/30 rounded-2xl p-8 mt-6">
             <i class="fas fa-robot text-4xl text-green-400 mb-4 block"></i>
             <h3 class="text-2xl font-bold mb-3">📝 ثبت لینک گروه شما</h3>
             <p class="text-zinc-300 mb-6">برای ثبت گروه خود در لینکدونی پر بازدید بتمن، روی دکمه زیر کلیک کنید و در ربات مراحل را طی کنید.</p>
-            
-            <a href="https://rubika.ir/@AdsCactusbot" target="_blank" class="inline-flex items-center gap-3 bg-green-600 hover:bg-green-500 px-8 py-4 rounded-2xl text-xl font-bold transition-all hover:scale-105">
-              <i class="fas fa-paper-plane"></i>
-              ثبت لینک در لینکدونی پر بازدید بتمن
-              <i class="fas fa-arrow-left"></i>
-            </a>
-            
+            <a href="https://rubika.ir/@AdsCactusbot" target="_blank" class="inline-flex items-center gap-3 bg-green-600 hover:bg-green-500 px-8 py-4 rounded-2xl text-xl font-bold transition-all hover:scale-105 pulse-animation"><i class="fas fa-paper-plane"></i> ثبت لینک در لینکدونی پر بازدید بتمن <i class="fas fa-arrow-left"></i></a>
             <p class="text-sm text-zinc-500 mt-6">🔹 بعد از کلیک، وارد ربات شوید و مراحل ثبت گروه را انجام دهید</p>
           </div>
         </div>
@@ -441,33 +526,24 @@
     </section>
   </div>
 
-  <!-- صفحه 5: ارتباط با ما -->
+  <!-- صفحه ارتباط با ما -->
   <div id="contactPage" class="page">
     <section class="py-20 min-h-[60vh] flex items-center">
-      <div class="max-w-3xl mx-auto px-6 w-full">
-        <div class="bg-zinc-900/80 border border-white/10 rounded-3xl p-10 text-center">
-          <i class="fas fa-headset text-6xl text-green-400 mb-5"></i>
+      <div class="max-w-3xl mx-auto px-6 w-full contact-card">
+        <div class="bg-zinc-900/80 border border-white/10 rounded-3xl p-10 text-center transition-all hover:shadow-2xl hover:border-green-500/50 duration-500">
+          <i class="fas fa-headset text-6xl text-green-400 mb-5 icon-spin"></i>
           <h2 class="text-3xl font-bold mb-6 text-green-400">ارتباط با ما</h2>
           <div class="space-y-4 text-right">
-            <div class="bg-zinc-800/50 rounded-2xl p-4 flex items-center gap-4">
-              <i class="fab fa-rubika text-2xl text-green-400"></i>
-              <div><p class="text-zinc-400 text-sm">آیدی مالک</p><a href="https://rubika.ir/@Bvvhjvd" target="_blank" class="text-green-400 font-bold hover:underline text-lg">@Bvvhjvd</a></div>
-            </div>
-            <div class="bg-zinc-800/50 rounded-2xl p-4 flex items-center gap-4">
-              <i class="fab fa-rubika text-2xl text-green-400"></i>
-              <div><p class="text-zinc-400 text-sm">آیدی سازنده</p><a href="https://rubika.ir/@AMIRYZ_F26" target="_blank" class="text-green-400 font-bold hover:underline text-lg">@AMIRYZ_F26</a></div>
-            </div>
+            <div class="bg-zinc-800/50 rounded-2xl p-4 flex items-center gap-4 transition-all hover:scale-105 hover:bg-zinc-800/80 duration-300"><i class="fab fa-rubika text-2xl text-green-400"></i><div><p class="text-zinc-400 text-sm">آیدی مالک</p><a href="https://rubika.ir/@Bvvhjvd" target="_blank" class="text-green-400 font-bold hover:underline text-lg">@Bvvhjvd</a></div></div>
+            <div class="bg-zinc-800/50 rounded-2xl p-4 flex items-center gap-4 transition-all hover:scale-105 hover:bg-zinc-800/80 duration-300"><i class="fab fa-rubika text-2xl text-green-400"></i><div><p class="text-zinc-400 text-sm">آیدی سازنده</p><a href="https://rubika.ir/@AMIRYZ_F26" target="_blank" class="text-green-400 font-bold hover:underline text-lg">@AMIRYZ_F26</a></div></div>
           </div>
-          <div class="mt-8 pt-6 border-t border-white/10">
-            <p class="text-zinc-400 text-sm">📧 ایمیل پشتیبانی: mahdikhashy83@gmail.com</p>
-            <p class="text-zinc-400 text-sm mt-2">⏰ ساعات پاسخگویی: 24ساعته فعال</p>
-          </div>
+          <div class="mt-8 pt-6 border-t border-white/10"><p class="text-zinc-400 text-sm">📧 ایمیل پشتیبانی:mahdikhashy83@gmail.com support@batmanrh.com</p><p class="text-zinc-400 text-sm mt-2">⏰ ساعات پاسخگویی: 24ساعته فعال</p></div>
         </div>
       </div>
     </section>
   </div>
 
-  <!-- تبلیغات پایین صفحه -->
+  <!-- تبلیغات -->
   <div id="adsSection" class="max-w-5xl mx-auto px-6 py-10" style="display: none;">
     <div class="border-t border-white/10 pt-10">
       <h3 class="text-center text-zinc-400 text-sm mb-6"><i class="fas fa-ad mr-2"></i> تبلیغات</h3>
@@ -475,19 +551,14 @@
     </div>
   </div>
 
-  <footer class="py-8 text-center text-zinc-500 text-sm border-t border-white/10">
-    © 1405 - ربات مدیریت گروه بتمن | تمتمی حقوق محفوظ است
-  </footer>
+  <footer class="py-8 text-center text-zinc-500 text-sm border-t border-white/10">© 1405 - ربات مدیریت گروه بتمن | تمامی حقوق محفوظ است</footer>
 
   <script>
-    // ==================== دیتابیس JSONBin.io ====================
     const BIN_ID = "6a070cb0adc21f119aa41c0a";
     const API_KEY = "$2a$10$Y3uJQT23PdFg655lRv2f7eHwQeHurCL6FhUqAgahVxZBKOKaowlWG";
     
     const DEFAULT_DATA = {
-      siteColor: "#22c55e",
-      bgType: "gradient",
-      bgImage: "",
+      siteColor: "#22c55e", bgType: "gradient", bgImage: "",
       botLocks: { link: false, spam: false, foul: false, media: false, file: false, flood: false },
       pollVotes: { عالی: 0, خوب: 0, "نیاز به بهبود": 0 },
       ads: []
@@ -514,57 +585,28 @@
       return false;
     }
     
-    // ==================== تنظیمات پس زمینه ====================
     function applyBackgroundSettings() {
       const body = document.getElementById('mainBody');
       const bgType = siteData.bgType || 'gradient';
       const bgImage = siteData.bgImage || '';
-      
-      if(bgType === 'gradient') {
-        body.className = 'bg-zinc-950 text-white hero-bg min-h-screen';
-        body.style.background = '';
-        body.style.animation = 'gradient 15s ease infinite';
-      } else if(bgType === 'dark') {
-        body.className = 'bg-zinc-950 text-white min-h-screen';
-        body.style.background = '#0a0a0a';
-        body.style.animation = 'none';
-      } else if(bgType === 'light') {
-        body.className = 'bg-gray-100 text-black min-h-screen';
-        body.style.background = '#f5f5f5';
-        body.style.animation = 'none';
-      } else if(bgType === 'custom' && bgImage) {
-        body.className = 'text-white min-h-screen';
-        body.style.background = `url('${bgImage}') center/cover fixed`;
-        body.style.animation = 'none';
-      }
+      if(bgType === 'gradient') { body.className = 'bg-zinc-950 text-white hero-bg min-h-screen'; body.style.background = ''; body.style.animation = 'gradient 15s ease infinite'; }
+      else if(bgType === 'dark') { body.className = 'bg-zinc-950 text-white min-h-screen'; body.style.background = '#0a0a0a'; body.style.animation = 'none'; }
+      else if(bgType === 'light') { body.className = 'bg-gray-100 text-black min-h-screen'; body.style.background = '#f5f5f5'; body.style.animation = 'none'; }
+      else if(bgType === 'custom' && bgImage) { body.className = 'text-white min-h-screen'; body.style.background = `url('${bgImage}') center/cover fixed`; body.style.animation = 'none'; }
     }
     
-    // ==================== تبلیغات با آپلود مستقیم عکس و فیلم ====================
     function renderAdsToPage() {
       const ads = siteData.ads || [];
       const adsSection = document.getElementById('adsSection');
       const adsContainer = document.getElementById('adsContainer');
-      
       if(!adsSection || !adsContainer) return;
-      
-      if(ads.length === 0) {
-        adsSection.style.display = 'none';
-        return;
-      }
-      
+      if(ads.length === 0) { adsSection.style.display = 'none'; return; }
       adsSection.style.display = 'block';
       adsContainer.innerHTML = '';
-      
       ads.forEach(ad => {
         if(ad.title && ad.link) {
           const isVideo = ad.mediaType === 'video' && ad.media;
-          adsContainer.innerHTML += `
-            <a href="${ad.link}" target="_blank" class="ad-card bg-gradient-to-r from-zinc-900 to-zinc-900/80 border border-zinc-700 rounded-2xl p-5 flex items-center gap-4 transition-all hover:border-green-500 no-underline">
-              ${isVideo ? `<video src="${ad.media}" class="w-14 h-14 rounded-xl object-cover" muted></video>` : (ad.media ? `<img src="${ad.media}" class="w-14 h-14 rounded-xl object-cover">` : `<div class="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center"><i class="fas fa-bullhorn text-green-400 text-xl"></i></div>`)}
-              <div class="flex-1"><p class="text-zinc-400 text-xs">تبلیغات</p><p class="text-white font-bold">${escapeHtml(ad.title)}</p></div>
-              <i class="fas fa-chevron-left text-zinc-500"></i>
-            </a>
-          `;
+          adsContainer.innerHTML += `<a href="${ad.link}" target="_blank" class="ad-card bg-gradient-to-r from-zinc-900 to-zinc-900/80 border border-zinc-700 rounded-2xl p-5 flex items-center gap-4 transition-all hover:border-green-500 no-underline">${isVideo ? `<video src="${ad.media}" class="w-14 h-14 rounded-xl object-cover" muted></video>` : (ad.media ? `<img src="${ad.media}" class="w-14 h-14 rounded-xl object-cover">` : `<div class="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center"><i class="fas fa-bullhorn text-green-400 text-xl"></i></div>`)}<div class="flex-1"><p class="text-zinc-400 text-xs">تبلیغات</p><p class="text-white font-bold">${escapeHtml(ad.title)}</p></div><i class="fas fa-chevron-left text-zinc-500"></i></a>`;
         }
       });
     }
@@ -572,36 +614,12 @@
     function renderAdsManager() {
       const container = document.getElementById('adsManagerList');
       if(!container) return;
-      
       const ads = siteData.ads || [];
-      if(ads.length === 0) {
-        container.innerHTML = '<div class="text-center text-zinc-500 py-4">📭 هیچ تبلیغی ثبت نشده است</div>';
-        return;
-      }
-      
+      if(ads.length === 0) { container.innerHTML = '<div class="text-center text-zinc-500 py-4">📭 هیچ تبلیغی ثبت نشده است</div>'; return; }
       container.innerHTML = '';
       ads.forEach((ad, index) => {
         const isVideo = ad.mediaType === 'video';
-        container.innerHTML += `
-          <div class="bg-zinc-800/50 rounded-xl p-4 border border-zinc-700">
-            <div class="flex gap-3 mb-3">
-              ${ad.media ? (isVideo ? `<video src="${ad.media}" class="w-16 h-16 rounded-xl object-cover" id="preview_${index}" muted></video>` : `<img src="${ad.media}" class="w-16 h-16 rounded-xl object-cover" id="preview_${index}">`) : `<div class="w-16 h-16 bg-zinc-700 rounded-xl flex items-center justify-center" id="preview_${index}"><i class="fas fa-image text-zinc-500 text-2xl"></i></div>`}
-              <div class="flex-1">
-                <input type="text" id="adTitle_${index}" value="${escapeHtml(ad.title || '')}" placeholder="عنوان تبلیغ" class="w-full bg-zinc-700 border border-zinc-600 rounded-lg p-2 text-sm mb-2">
-                <input type="text" id="adLink_${index}" value="${escapeHtml(ad.link || '')}" placeholder="لینک تبلیغ" class="w-full bg-zinc-700 border border-zinc-600 rounded-lg p-2 text-sm mb-2">
-                <div class="flex gap-2">
-                  <input type="text" id="adMedia_${index}" value="${escapeHtml(ad.media || '')}" placeholder="لینک عکس/فیلم" class="flex-1 bg-zinc-700 border border-zinc-600 rounded-lg p-2 text-sm">
-                  <button class="uploadMediaBtn bg-blue-600 hover:bg-blue-500 rounded-lg px-3 text-sm" data-index="${index}">📁 آپلود</button>
-                </div>
-                <div class="flex gap-2 mt-2">
-                  <button class="setAsImageBtn ${ad.mediaType === 'image' ? 'bg-green-600' : 'bg-zinc-700'} rounded-lg px-2 text-xs py-1" data-index="${index}" data-type="image">🖼️ عکس</button>
-                  <button class="setAsVideoBtn ${ad.mediaType === 'video' ? 'bg-green-600' : 'bg-zinc-700'} rounded-lg px-2 text-xs py-1" data-index="${index}" data-type="video">🎬 فیلم</button>
-                </div>
-              </div>
-            </div>
-            <button class="deleteAdBtn w-full bg-red-600/50 hover:bg-red-600 rounded-lg p-2 text-sm" data-id="${ad.id || index}">🗑️ حذف تبلیغ</button>
-          </div>
-        `;
+        container.innerHTML += `<div class="bg-zinc-800/50 rounded-xl p-4 border border-zinc-700"><div class="flex gap-3 mb-3">${ad.media ? (isVideo ? `<video src="${ad.media}" class="w-16 h-16 rounded-xl object-cover" id="preview_${index}" muted></video>` : `<img src="${ad.media}" class="w-16 h-16 rounded-xl object-cover" id="preview_${index}">`) : `<div class="w-16 h-16 bg-zinc-700 rounded-xl flex items-center justify-center" id="preview_${index}"><i class="fas fa-image text-zinc-500 text-2xl"></i></div>`}<div class="flex-1"><input type="text" id="adTitle_${index}" value="${escapeHtml(ad.title || '')}" placeholder="عنوان تبلیغ" class="w-full bg-zinc-700 border border-zinc-600 rounded-lg p-2 text-sm mb-2"><input type="text" id="adLink_${index}" value="${escapeHtml(ad.link || '')}" placeholder="لینک تبلیغ" class="w-full bg-zinc-700 border border-zinc-600 rounded-lg p-2 text-sm mb-2"><div class="flex gap-2"><input type="text" id="adMedia_${index}" value="${escapeHtml(ad.media || '')}" placeholder="لینک عکس/فیلم" class="flex-1 bg-zinc-700 border border-zinc-600 rounded-lg p-2 text-sm"><button class="uploadMediaBtn bg-blue-600 hover:bg-blue-500 rounded-lg px-3 text-sm" data-index="${index}">📁 آپلود</button></div><div class="flex gap-2 mt-2"><button class="setAsImageBtn ${ad.mediaType === 'image' ? 'bg-green-600' : 'bg-zinc-700'} rounded-lg px-2 text-xs py-1" data-index="${index}" data-type="image">🖼️ عکس</button><button class="setAsVideoBtn ${ad.mediaType === 'video' ? 'bg-green-600' : 'bg-zinc-700'} rounded-lg px-2 text-xs py-1" data-index="${index}" data-type="video">🎬 فیلم</button></div></div></div><button class="deleteAdBtn w-full bg-red-600/50 hover:bg-red-600 rounded-lg p-2 text-sm" data-id="${ad.id || index}">🗑️ حذف تبلیغ</button></div>`;
       });
       
       document.querySelectorAll('.uploadMediaBtn').forEach(btn => {
@@ -613,6 +631,25 @@
           input.onchange = (e) => {
             const file = e.target.files[0];
             if(file) {
+              if(file.size > 500 * 1024) {
+                alert(`❌ حجم فایل ${(file.size/1024).toFixed(0)} کیلوبایت است! حداکثر 500 کیلوبایت مجاز است.\nلطفاً از لینک عکس/فیلم استفاده کنید.`);
+                const link = prompt('لینک عکس/فیلم خود را وارد کنید (مثلاً از uupload.ir):');
+                if(link) {
+                  const mediaInput = document.getElementById(`adMedia_${idx}`);
+                  if(mediaInput) mediaInput.value = link;
+                  const preview = document.getElementById(`preview_${idx}`);
+                  if(preview) {
+                    if(link.match(/\.(mp4|webm|mov)$/i)) {
+                      preview.outerHTML = `<video src="${link}" class="w-16 h-16 rounded-xl object-cover" id="preview_${idx}" muted></video>`;
+                      if(siteData.ads[idx]) siteData.ads[idx].mediaType = 'video';
+                    } else {
+                      preview.outerHTML = `<img src="${link}" class="w-16 h-16 rounded-xl object-cover" id="preview_${idx}">`;
+                      if(siteData.ads[idx]) siteData.ads[idx].mediaType = 'image';
+                    }
+                  }
+                }
+                return;
+              }
               const reader = new FileReader();
               reader.onload = (ev) => {
                 const mediaInput = document.getElementById(`adMedia_${idx}`);
@@ -635,27 +672,13 @@
       });
       
       document.querySelectorAll('.setAsImageBtn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const idx = btn.getAttribute('data-index');
-          if(siteData.ads[idx]) siteData.ads[idx].mediaType = 'image';
-          renderAdsManager();
-        });
+        btn.addEventListener('click', () => { const idx = btn.getAttribute('data-index'); if(siteData.ads[idx]) siteData.ads[idx].mediaType = 'image'; renderAdsManager(); });
       });
-      
       document.querySelectorAll('.setAsVideoBtn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const idx = btn.getAttribute('data-index');
-          if(siteData.ads[idx]) siteData.ads[idx].mediaType = 'video';
-          renderAdsManager();
-        });
+        btn.addEventListener('click', () => { const idx = btn.getAttribute('data-index'); if(siteData.ads[idx]) siteData.ads[idx].mediaType = 'video'; renderAdsManager(); });
       });
-      
       document.querySelectorAll('.deleteAdBtn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const id = btn.getAttribute('data-id');
-          siteData.ads = (siteData.ads || []).filter(ad => ad.id != id);
-          renderAdsManager();
-        });
+        btn.addEventListener('click', () => { const id = btn.getAttribute('data-id'); siteData.ads = (siteData.ads || []).filter(ad => ad.id != id); renderAdsManager(); });
       });
     }
     
@@ -673,44 +696,35 @@
     
     document.getElementById('addNewAdBtn')?.addEventListener('click', () => {
       if(!siteData.ads) siteData.ads = [];
-      const newId = Date.now().toString();
-      siteData.ads.push({ id: newId, title: '', link: '', media: '', mediaType: 'image' });
+      siteData.ads.push({ id: Date.now().toString(), title: '', link: '', media: '', mediaType: 'image' });
       renderAdsManager();
     });
     
-    // ==================== انیمیشن کارت قابلیت‌ها ====================
     function initFeatureCards() {
       document.querySelectorAll('.feature-card').forEach(card => {
-        card.addEventListener('click', function() {
+        card.addEventListener('click', function(e) {
+          e.stopPropagation();
           this.classList.toggle('flipped');
         });
       });
     }
     
-    // ==================== نظرسنجی ====================
     let hasUserVoted = localStorage.getItem('batmanPollVoted') === 'true';
-    
     function updatePollUI() {
       const votes = siteData.pollVotes || { عالی: 0, خوب: 0, "نیاز به بهبود": 0 };
       const total = (votes['عالی'] || 0) + (votes['خوب'] || 0) + (votes['نیاز به بهبود'] || 0);
-      const percent1 = total === 0 ? 0 : ((votes['عالی'] || 0) / total * 100).toFixed(0);
-      const percent2 = total === 0 ? 0 : ((votes['خوب'] || 0) / total * 100).toFixed(0);
-      const percent3 = total === 0 ? 0 : ((votes['نیاز به بهبود'] || 0) / total * 100).toFixed(0);
-      
-      const p1 = document.getElementById('pollPercent1'); if(p1) p1.textContent = percent1 + '%';
-      const p2 = document.getElementById('pollPercent2'); if(p2) p2.textContent = percent2 + '%';
-      const p3 = document.getElementById('pollPercent3'); if(p3) p3.textContent = percent3 + '%';
-      const b1 = document.getElementById('pollBar1'); if(b1) b1.style.width = percent1 + '%';
-      const b2 = document.getElementById('pollBar2'); if(b2) b2.style.width = percent2 + '%';
-      const b3 = document.getElementById('pollBar3'); if(b3) b3.style.width = percent3 + '%';
-      
-      const tv = document.getElementById('totalVotesDisplay'); if(tv) tv.textContent = `📊 مجموع آراء: ${total} نفر`;
-      const pm = document.getElementById('pollMessage');
-      if(pm) pm.innerHTML = total === 0 ? '✨ اولین نفری باشید که نظر می‌دهید!' : `✅ ${total} نفر تاکنون نظر داده‌اند.`;
-      
-      const pus = document.getElementById('pollUserStatus');
-      if(pus) pus.innerHTML = hasUserVoted ? '✅ شما قبلاً نظر خود را ثبت کرده‌اید.' : '✨ هر کاربر فقط یک بار می‌تواند نظر دهد.';
-      
+      const p1 = total === 0 ? 0 : ((votes['عالی'] || 0) / total * 100).toFixed(0);
+      const p2 = total === 0 ? 0 : ((votes['خوب'] || 0) / total * 100).toFixed(0);
+      const p3 = total === 0 ? 0 : ((votes['نیاز به بهبود'] || 0) / total * 100).toFixed(0);
+      if(document.getElementById('pollPercent1')) document.getElementById('pollPercent1').textContent = p1 + '%';
+      if(document.getElementById('pollPercent2')) document.getElementById('pollPercent2').textContent = p2 + '%';
+      if(document.getElementById('pollPercent3')) document.getElementById('pollPercent3').textContent = p3 + '%';
+      if(document.getElementById('pollBar1')) document.getElementById('pollBar1').style.width = p1 + '%';
+      if(document.getElementById('pollBar2')) document.getElementById('pollBar2').style.width = p2 + '%';
+      if(document.getElementById('pollBar3')) document.getElementById('pollBar3').style.width = p3 + '%';
+      if(document.getElementById('totalVotesDisplay')) document.getElementById('totalVotesDisplay').textContent = `📊 مجموع آراء: ${total} نفر`;
+      if(document.getElementById('pollMessage')) document.getElementById('pollMessage').innerHTML = total === 0 ? '✨ اولین نفری باشید که نظر می‌دهید!' : `✅ ${total} نفر تاکنون نظر داده‌اند.`;
+      if(document.getElementById('pollUserStatus')) document.getElementById('pollUserStatus').innerHTML = hasUserVoted ? '✅ شما قبلاً نظر خود را ثبت کرده‌اید.' : '✨ هر کاربر فقط یک بار می‌تواند نظر دهد.';
       document.querySelectorAll('.poll-option').forEach(opt => {
         if(hasUserVoted) { opt.style.opacity = '0.5'; opt.style.cursor = 'not-allowed'; opt.classList.add('disabled'); }
         else { opt.style.opacity = '1'; opt.style.cursor = 'pointer'; opt.classList.remove('disabled'); }
@@ -733,7 +747,6 @@
       addPollVote(this.getAttribute('data-poll-value'));
     }
     
-    // ==================== رنگ و ظاهر ====================
     function applyColor(color) {
       if(document.getElementById('mainTitle')) document.getElementById('mainTitle').style.color = color;
       if(document.getElementById('primaryBtn')) document.getElementById('primaryBtn').style.backgroundColor = color;
@@ -773,10 +786,7 @@
       const bgPreview = document.getElementById('bgPreview');
       const removeBgBtn = document.getElementById('removeBgBtn');
       if(customBgSection) customBgSection.style.display = (siteData.bgType === 'custom') ? 'block' : 'none';
-      if(bgPreview && siteData.bgImage) {
-        bgPreview.style.display = 'block';
-        bgPreview.style.backgroundImage = `url('${siteData.bgImage}')`;
-      }
+      if(bgPreview && siteData.bgImage) { bgPreview.style.display = 'block'; bgPreview.style.backgroundImage = `url('${siteData.bgImage}')`; }
       if(removeBgBtn) removeBgBtn.style.display = siteData.bgImage ? 'block' : 'none';
       renderBotLocks();
       updatePollUI();
@@ -784,12 +794,10 @@
       renderAdsManager();
     }
     
-    // ==================== تنظیمات پس زمینه در پنل مدیریت ====================
     document.getElementById('bgTypeSelect')?.addEventListener('change', (e) => {
-      const val = e.target.value;
-      siteData.bgType = val;
+      siteData.bgType = e.target.value;
       const customBgSection = document.getElementById('customBgSection');
-      if(customBgSection) customBgSection.style.display = val === 'custom' ? 'block' : 'none';
+      if(customBgSection) customBgSection.style.display = e.target.value === 'custom' ? 'block' : 'none';
       applyBackgroundSettings();
     });
     
@@ -800,16 +808,14 @@
       input.onchange = (e) => {
         const file = e.target.files[0];
         if(file) {
+          if(file.size > 500 * 1024) { alert(`❌ حجم فایل ${(file.size/1024).toFixed(0)} کیلوبایت است! حداکثر 500 کیلوبایت مجاز است.`); return; }
           const reader = new FileReader();
           reader.onload = (ev) => {
             siteData.bgImage = ev.target.result;
             siteData.bgType = 'custom';
             if(document.getElementById('bgTypeSelect')) document.getElementById('bgTypeSelect').value = 'custom';
             const bgPreview = document.getElementById('bgPreview');
-            if(bgPreview) {
-              bgPreview.style.display = 'block';
-              bgPreview.style.backgroundImage = `url('${ev.target.result}')`;
-            }
+            if(bgPreview) { bgPreview.style.display = 'block'; bgPreview.style.backgroundImage = `url('${ev.target.result}')`; }
             const removeBgBtn = document.getElementById('removeBgBtn');
             if(removeBgBtn) removeBgBtn.style.display = 'block';
             applyBackgroundSettings();
@@ -833,12 +839,10 @@
       applyBackgroundSettings();
     });
     
-    // ==================== ذخیره تنظیمات ادمین ====================
     document.getElementById('saveAdminSettings')?.addEventListener('click', async () => {
       siteData.siteColor = document.getElementById('siteColor').value;
       siteData.bgType = document.getElementById('bgTypeSelect').value;
       saveAdsFromManager();
-      
       const statusDiv = document.getElementById('saveStatus');
       if(statusDiv) statusDiv.textContent = '⏳ در حال ذخیره...';
       const success = await saveDataToServer();
@@ -847,7 +851,6 @@
       setTimeout(() => { if(statusDiv) statusDiv.textContent = ''; }, 2500);
     });
     
-    // ==================== لوگو ====================
     let logoClickCount = 0, logoTimer = null;
     document.getElementById('logoContainer')?.addEventListener('click', () => {
       logoClickCount++; clearTimeout(logoTimer); logoTimer = setTimeout(() => logoClickCount = 0, 1000);
@@ -858,7 +861,10 @@
           const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*';
           input.onchange = (e) => {
             const file = e.target.files[0];
-            if(file) { const reader = new FileReader(); reader.onload = (ev) => { document.getElementById('mainLogo').src = ev.target.result; localStorage.setItem('batmanLogo', ev.target.result); alert('✅ لوگو تغییر کرد!'); }; reader.readAsDataURL(file); }
+            if(file) {
+              if(file.size > 500 * 1024) { alert('❌ حجم لوگو بیشتر از 500 کیلوبایت است!'); return; }
+              const reader = new FileReader(); reader.onload = (ev) => { document.getElementById('mainLogo').src = ev.target.result; localStorage.setItem('batmanLogo', ev.target.result); alert('✅ لوگو تغییر کرد!'); }; reader.readAsDataURL(file);
+            }
           };
           input.click();
         } else if(logoPass !== null) alert('❌ رمز اشتباه است!');
@@ -866,7 +872,6 @@
     });
     const savedLogo = localStorage.getItem('batmanLogo'); if(savedLogo && document.getElementById('mainLogo')) document.getElementById('mainLogo').src = savedLogo;
     
-    // ==================== تنظیمات کاربر ====================
     function applyUserColor(color) { applyColor(color); localStorage.setItem('userColor', color); }
     function applyFontSize(size) { let fontSize = size==='small'?'14px':size==='large'?'18px':'16px'; document.body.style.fontSize = fontSize; localStorage.setItem('fontSize', size); }
     
@@ -884,7 +889,6 @@
       alert('✅ تنظیمات بازگشت!');
     });
     
-    // ==================== پنل مدیریت ====================
     let adminClickCount = 0, adminTimer = null;
     document.getElementById('adminBtn')?.addEventListener('click', () => {
       adminClickCount++; clearTimeout(adminTimer); adminTimer = setTimeout(() => adminClickCount = 0, 1000);
@@ -905,7 +909,6 @@
     document.getElementById('closeAdminModal')?.addEventListener('click', () => { document.getElementById('adminModal').classList.remove('active'); });
     document.getElementById('adminModal')?.addEventListener('click', (e) => { if(e.target === document.getElementById('adminModal')) document.getElementById('adminModal').classList.remove('active'); });
     
-    // ==================== صفحه بندی ====================
     const pages = { home: 'homePage', features: 'featuresPage', survey: 'surveyPage', linkdonation: 'linkdonationPage', contact: 'contactPage' };
     function showPage(pageId) { 
       Object.keys(pages).forEach(key => { const el = document.getElementById(pages[key]); if(el) el.classList.remove('active'); }); 
@@ -914,18 +917,14 @@
     }
     document.querySelectorAll('.nav-btn').forEach(btn => { btn.addEventListener('click', () => showPage(btn.getAttribute('data-page'))); });
     
-    // منوی تنظیمات
     document.getElementById('settingsToggle')?.addEventListener('click', () => { document.getElementById('settingsMenu').classList.toggle('active'); });
     document.addEventListener('click', (e) => { const menu = document.getElementById('settingsMenu'); const toggle = document.getElementById('settingsToggle'); if(menu && toggle && !toggle.contains(e.target) && !menu.contains(e.target)) menu.classList.remove('active'); });
     
-    // آمار آنلاین
     let onlineCount = 156;
     setInterval(() => { onlineCount += Math.floor(Math.random() * 11) - 3; if(onlineCount < 50) onlineCount = 65; if(onlineCount > 400) onlineCount = 350; const oc = document.getElementById('onlineCount'); if(oc) oc.textContent = onlineCount.toLocaleString('fa-IR'); }, 8000);
     
-    // رویدادهای نظرسنجی
     document.querySelectorAll('.poll-option').forEach(opt => { opt.removeEventListener('click', pollClickHandler); opt.addEventListener('click', pollClickHandler); });
     
-    // اجرای اولیه
     (async function init() { await loadDataFromServer(); applyDataToPage(); showPage('home'); initFeatureCards(); })();
   </script>
 </body>
