@@ -12,8 +12,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <!-- PubNub SDK برای آنلاین واقعی -->
-  <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.7.5.0.min.js"></script>
   <style>
     * { font-family: 'Vazirmatn', 'Tahoma', system-ui, sans-serif; }
     body { transition: all 0.3s ease; }
@@ -243,20 +241,9 @@
     .poll-option.disabled { opacity: 0.5; cursor: not-allowed; }
     .poll-option.disabled:hover { transform: none; background: none; }
     .bg-preview-box { width: 100%; height: 80px; border-radius: 16px; margin-top: 10px; background-size: cover; background-position: center; }
-    
-    /* انیمیشن برای لینکدونی */
-    .linkdonation-card {
-      animation: slideUp 0.6s ease-out;
-    }
-    .linkdonation-card:hover {
-      transform: translateY(-8px);
-      transition: transform 0.3s ease;
-    }
-    
-    /* انیمیشن برای ارتباط با ما */
-    .contact-card {
-      animation: fadeInScale 0.5s ease-out;
-    }
+    .linkdonation-card { animation: slideUp 0.6s ease-out; }
+    .linkdonation-card:hover { transform: translateY(-8px); transition: transform 0.3s ease; }
+    .contact-card { animation: fadeInScale 0.5s ease-out; }
   </style>
 </head>
 <body id="mainBody" class="bg-zinc-950 text-white min-h-screen">
@@ -485,7 +472,7 @@
     </section>
   </div>
 
-  <!-- صفحه نظرسنجی با آنلاین واقعی -->
+  <!-- صفحه نظرسنجی -->
   <div id="surveyPage" class="page">
     <section class="py-20">
       <div class="max-w-4xl mx-auto px-6">
@@ -495,10 +482,10 @@
             <p class="text-zinc-400 text-lg">👥 کاربران آنلاین واقعی</p>
           </div>
           <div class="flex items-baseline justify-center gap-4">
-            <span class="counter text-green-500" id="onlineCount">در حال اتصال...</span>
+            <span class="counter text-green-500" id="onlineCount">در حال دریافت...</span>
             <span class="text-2xl text-green-400">نفر</span>
           </div>
-          <p class="text-zinc-500 text-sm mt-3">آپدیت لحظه‌ای با PubNub</p>
+          <p class="text-zinc-500 text-sm mt-3">آپدیت هر ۴۵ ثانیه</p>
         </div>
         <div class="bg-zinc-900/80 border border-white/10 rounded-3xl p-8 slide-up">
           <div class="text-center mb-8"><i class="fas fa-chart-simple text-5xl text-green-400 mb-3"></i><h2 class="text-3xl font-bold text-green-400">📊 نظر سنجی</h2><p class="text-xs text-zinc-500 mt-1" id="pollUserStatus">✨ هر کاربر فقط یک بار می‌تواند نظر دهد</p></div>
@@ -545,7 +532,7 @@
             <div class="bg-zinc-800/50 rounded-2xl p-4 flex items-center gap-4 transition-all hover:scale-105 hover:bg-zinc-800/80 duration-300"><i class="fab fa-rubika text-2xl text-green-400"></i><div><p class="text-zinc-400 text-sm">آیدی مالک</p><a href="https://rubika.ir/@Bvvhjvd" target="_blank" class="text-green-400 font-bold hover:underline text-lg">@Bvvhjvd</a></div></div>
             <div class="bg-zinc-800/50 rounded-2xl p-4 flex items-center gap-4 transition-all hover:scale-105 hover:bg-zinc-800/80 duration-300"><i class="fab fa-rubika text-2xl text-green-400"></i><div><p class="text-zinc-400 text-sm">آیدی سازنده</p><a href="https://rubika.ir/@AMIRYZ_F26" target="_blank" class="text-green-400 font-bold hover:underline text-lg">@AMIRYZ_F26</a></div></div>
           </div>
-          <div class="mt-8 pt-6 border-t border-white/10"><p class="text-zinc-400 text-sm">📧 ایمیل پشتیبانی: mahdikhashy83@gmail.com</p><p class="text-zinc-400 text-sm mt-2">⏰ ساعات پاسخگویی:24ساعته فعال</p></div>
+          <div class="mt-8 pt-6 border-t border-white/10"><p class="text-zinc-400 text-sm">📧 ایمیل پشتیبانی: mahdikhashy83@gmail.com</p><p class="text-zinc-400 text-sm mt-2">⏰ ساعات پاسخگویی: 24ساعته فعال</p></div>
         </div>
       </div>
     </section>
@@ -559,69 +546,21 @@
     </div>
   </div>
 
-  <footer class="py-8 text-center text-zinc-500 text-sm border-t border-white/10">© ۱۴۰۴ - ربات مدیریت گروه بتمن | BatmanRH</footer>
+  <footer class="py-8 text-center text-zinc-500 text-sm border-t border-white/10">© 1405 - ربات مدیریت گروه بتمن | تمامی حقوق محفوظ است</footer>
 
   <script>
-    // ==================== راه‌اندازی PubNub برای تعداد آنلاین واقعی ====================
-    // ایجاد یا بازیابی userId یکتا برای هر کاربر
-    let userId = localStorage.getItem('pn_user_id');
-    if (!userId) {
-      userId = 'user_' + Math.random().toString(36).substr(2, 9);
-      localStorage.setItem('pn_user_id', userId);
-    }
-
-    const pubnub = new PubNub({
-      publishKey: "pub-c-ea793320-d670-4499-b0d8-d99ad159d6da",
-      subscribeKey: "sub-c-78d1ad8e-3f8e-4679-9761-ea739d0d3a5a",
-      userId: userId
-    });
-
-    const channel = "batman-online-channel";
-
-    function updateOnlineCounter(occupancy) {
-      const counterSpan = document.getElementById('onlineCount');
-      if (counterSpan) {
-        counterSpan.textContent = occupancy;
-      }
-    }
-
-    // اشتراک در کانال با قابلیت حضور (Presence)
-    pubnub.subscribe({
-      channels: [channel],
-      withPresence: true
-    });
-
-    // گوش دادن به رویدادهای حضور
-    pubnub.addListener({
-      presence: (presenceEvent) => {
-        if (presenceEvent.channel === channel && presenceEvent.occupancy !== undefined) {
-          updateOnlineCounter(presenceEvent.occupancy);
-        }
-      },
-      status: (statusEvent) => {
-        if (statusEvent.category === "PNConnectedCategory") {
-          // در اولین اتصال، تعداد فعلی را دریافت کن
-          pubnub.hereNow({ channels: [channel] }, (status, response) => {
-            if (status.error) {
-              updateOnlineCounter("?");
-            } else {
-              const occupancy = response?.channels[channel]?.occupancy || 0;
-              updateOnlineCounter(occupancy);
-            }
-          });
-        }
-      }
-    });
-
     // ==================== دیتابیس JSONBin.io ====================
     const BIN_ID = "6a070cb0adc21f119aa41c0a";
     const API_KEY = "$2a$10$Y3uJQT23PdFg655lRv2f7eHwQeHurCL6FhUqAgahVxZBKOKaowlWG";
     
     const DEFAULT_DATA = {
-      siteColor: "#22c55e", bgType: "gradient", bgImage: "",
+      siteColor: "#22c55e",
+      bgType: "gradient",
+      bgImage: "",
       botLocks: { link: false, spam: false, foul: false, media: false, file: false, flood: false },
       pollVotes: { عالی: 0, خوب: 0, "نیاز به بهبود": 0 },
-      ads: []
+      ads: [],
+      onlineUsers: {}   // اضافه شد
     };
     
     let siteData = { ...DEFAULT_DATA };
@@ -644,7 +583,72 @@
       siteData = { ...DEFAULT_DATA };
       return false;
     }
+
+    // ==================== آنلاین واقعی با JSONBin (بدون PubNub) ====================
+    let onlineUserId = localStorage.getItem('online_user_id');
+    if (!onlineUserId) {
+      onlineUserId = 'user_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+      localStorage.setItem('online_user_id', onlineUserId);
+    }
+
+    async function updateOnlineUsers() {
+      try {
+        // دریافت داده‌های فعلی از دیتابیس
+        const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, { headers: { 'X-Master-Key': API_KEY } });
+        const data = await response.json();
+        let onlineUsers = data.record.onlineUsers || {};
+        
+        // به‌روزرسانی زمان کاربر جاری
+        onlineUsers[onlineUserId] = Date.now();
+        
+        // حذف کاربران غیرفعال (بیشتر از 2 دقیقه)
+        const now = Date.now();
+        for (let id in onlineUsers) {
+          if (now - onlineUsers[id] > 120000) { // 120000 ms = 2 دقیقه
+            delete onlineUsers[id];
+          }
+        }
+        
+        // ذخیره در دیتابیس
+        await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'X-Master-Key': API_KEY },
+          body: JSON.stringify({ ...data.record, onlineUsers })
+        });
+        
+        // نمایش تعداد آنلاین
+        const count = Object.keys(onlineUsers).length;
+        const onlineSpan = document.getElementById('onlineCount');
+        if (onlineSpan) onlineSpan.textContent = count;
+      } catch(e) {
+        console.error("Error updating online users:", e);
+      }
+    }
+
+    // هر 45 ثانیه به‌روزرسانی (برای جلوگیری از هنگ)
+    setInterval(updateOnlineUsers, 45000);
     
+    // هنگام بسته شدن صفحه، کاربر را حذف کن
+    window.addEventListener('beforeunload', async () => {
+      try {
+        const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, { headers: { 'X-Master-Key': API_KEY } });
+        const data = await response.json();
+        let onlineUsers = data.record.onlineUsers || {};
+        delete onlineUsers[onlineUserId];
+        await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'X-Master-Key': API_KEY },
+          body: JSON.stringify({ ...data.record, onlineUsers })
+        });
+      } catch(e) {}
+    });
+    
+    // بارگذاری اولیه
+    (async () => {
+      await updateOnlineUsers();
+    })();
+
+    // ==================== بقیه توابع (بدون تغییر) ====================
     function applyBackgroundSettings() {
       const body = document.getElementById('mainBody');
       const bgType = siteData.bgType || 'gradient';
